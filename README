@@ -1,0 +1,35 @@
+###############################################
+Secure Files Module                     v trunk
+###############################################
+
+A light-weight secure file provider.
+
+Maintainer Contact
+-----------------------------------------------
+Hamish Campbell
+<hn.campbell (at) gmail (dot) com>
+
+Requirements
+-----------------------------------------------
+SilverStripe 2.3
+
+Documentation
+-----------------------------------------------
+http://doc.silverstripe.com/doku.php?id=modules:securefiles
+
+Installation Instructions
+-----------------------------------------------
+1. Extract the module to your website directory.
+
+2. Run /dev/build?flush=1
+
+Usage Overview
+-----------------------------------------------
+Adds a "Security" tab to the Folder options in
+Asset Administration. From here you can turn
+security on/off and set who can view the asset.
+
+Securing files will cause extra load on your
+webserver and your database, as sapphire will check
+the datatabase for access permissions, and pass the
+data through sapphire when it is output to the user.
