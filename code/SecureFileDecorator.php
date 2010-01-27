@@ -13,109 +13,50 @@ class SecureFileDecorator extends DataObjectDecorator {
 			'db' => array(
 				'Secured' => 'Boolean',
 			),
-			'has_many' => array(
-				'MemberPermission' => 'SecureFilePermission',
-			),
 		);
 	}
 	
+	function canView($member = null) {
+		if($this->owner->basicViewChecks($member))
+			return true;
+	}
+	
+	function basicViewChecks($member = null) {
+		if(Permission::checkMember($member, array('ADMIN', 'SECURE_FILE_ACCESS'))) 
+			return true;
+		if(!$this->owner->Secured && !$this->owner->InheritSecured())
+			return true;
+	}
+	
 	/**
-	 * Returns true if any of this files parent folders is secured
+	 * Are any of this file's parent folders secured
+	 * 
+	 * @return boolean
 	 */
 	public function InheritSecured() {
 		if($this->owner->ParentID) {
-			if($this->owner->Parent->Secured) return true;
-			else return $this->owner->Parent->InheritSecured();
+			if($this->owner->Parent()->Secured) return true;
+			else return $this->owner->Parent()->InheritSecured();
 		} else {
 			return false;
 		}
 	}
 	
 	/**
-	 * Returns this objects secure file permissions
-	 */
-	public function MemberPermissions() {
-		return DataObject::get("SecureFilePermission", "FileID = " . $this->owner->ID);
-	}
-
-	/**
-	 * Recursively merge permissions for this object and its parents
-	 */	
-	public function AllPermissions() {
-		$permissions = $this->MemberPermissions();
-		if(!$permissions) $permissions = new DataObjectSet();
-		if($this->owner->ParentID) $permissions->merge($this->owner->Parent->AllPermissions());
-		return $permissions;
-	}
-	
-	/**
 	 * Security tab for folders
 	 */
 	public function updateCMSFields(FieldSet &$fields) {
-		if(($this->owner instanceof Folder) && $this->owner->ID) {
-			$fields->addFieldToTab('Root.Security',	new HeaderField('Folder Security'));
-			
-			$GroupTreeField = new TreeMultiselectField("GroupPermission", "Group Access");
-
-			$TableField = new TableField(
-				"MemberPermissions",
-				"SecureFilePermission",
-				array(
-					'MemberID' => _t('Member.NAME', 'Name'),
-					'SecureCanView' => _t('SecureFiles.VIEW', 'View'),
-				),
-				array(
-					'MemberID' => 'SecureFileMemberDropdownField',
-					'SecureCanView' => 'CheckboxField',
-				),
-				"FileID",
-				$this->owner->ID
-			);
-
-			$TableField->setExtraData(array(
-				'FileID' => $this->owner->ID ? $this->owner->ID : '$RecordID'
-			));
 		
-			/**
-			 * Inherited Security Settings
-			 */
-			if($this->InheritSecured()) {
-				$InheritedPermissions = new TableListField(
-					'TableList',
-					'SecureFilePermission',
-					array(
-						'Member.Name' => _t('Member.NAME', 'Name'),
-						'File.RelativePath' => _t('HtmlEditorField.FOLDER', 'Folder'),
-						'SecureCanView' => _t('SecureFiles.VIEW', 'View'),
-					)
-				);
-				$InheritedPermissions->setFieldCasting(array(
-					'SecureCanView' => 'Boolean->Nice',
-				));
-
-				$InheritedPermissions->setCustomSourceItems($this->owner->AllPermissions());
-				$EnableSecurity = new LiteralField('InheritSecurity', 
-						_t('SecureFiles.INHERITED', 'This folder is inheriting security settings from a parent folder.'));
-			} else {
-				$EnableSecurity = new CheckboxField('Secured', _t('SecureFiles.SECUREFOLDER', 'Folder is secure.'));
-				$InheritedPermissions = null;
-			}
+		if(!($this->owner instanceof Folder) || !$this->owner->ID)
+			return;
+		
+		$EnableSecurityField = ($this->InheritSecured()) 
+			? new LiteralField('InheritSecurity', _t('SecureFiles.INHERITED', 'This folder is inheriting security settings from a parent folder.'))
+			: new CheckboxField('Secured', _t('SecureFiles.SECUREFOLDER', 'Folder is secure.'));			
+		
+		$fields->addFieldToTab('Root.Security',	new HeaderField('Folder Security'));
+		$fields->addFieldToTab('Root.Security', $EnableSecurityField);
 	
-			$fields->addFieldToTab('Root.Security', $EnableSecurity);
-			$fields->addFieldToTab('Root.Security', $GroupTreeField);
-			$fields->addFieldToTab('Root.Security', $TableField);
-			
-			if($InheritedPermissions) {
-				
-				$fields->addFieldToTab('Root.Security', new HeaderField(_t('SecureFiles.ALLPERMISSIONS', 'All Permissions'), 4));
-				$fields->addFieldToTab('Root.Security', new LiteralField("InheritedInfo", _t('SecureFiles.INHERITIEDINFO',
-					'These permissions summarise the permissions settings on this folder and all ' . 
-					'parent folders with permissions set. Note that "NO" settings always take precendence ' .
-					'over "YES" settings')));
-				$fields->addFieldToTab('Root.Security', $InheritedPermissions);
-			}
-
-		}
 	}
 
 	/**
@@ -128,13 +69,12 @@ class SecureFileDecorator extends DataObjectDecorator {
 	 */
 	function onAfterWrite() {
 		parent::onAfterWrite();
-		
 		if($this->owner instanceof Folder) {
-			$htaccess = $this->owner->getFullPath().SecureFileController::$htaccessfile;
+			$htaccess = $this->owner->getFullPath().SecureFileController::$htaccess_file;
 			if($this->owner->Secured && !file_exists($htaccess)) {
 				file_put_contents($htaccess, SecureFileController::HtaccessRules());				
 			} elseif(!$this->owner->Secured && file_exists($htaccess)) {
-				unlink($htaccess);				
+				unlink($htaccess);
 			}
 		}
 	}
