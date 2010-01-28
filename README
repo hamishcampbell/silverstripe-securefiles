@@ -1,5 +1,5 @@
 ###############################################
-Secure Files Module                     v trunk
+Secure Files Module                       trunk
 ###############################################
 
 A light-weight secure file provider.
@@ -15,7 +15,7 @@ SilverStripe 2.3
 
 Documentation
 -----------------------------------------------
-http://doc.silverstripe.com/doku.php?id=modules:securefiles
+http://polemic.net.nz/secure-files-module/?refer=docs
 
 Installation Instructions
 -----------------------------------------------
