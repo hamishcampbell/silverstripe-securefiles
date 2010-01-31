@@ -8,6 +8,9 @@
  */
 class SecureFileController extends Controller implements PermissionProvider {
 
+	/**
+	 * @var string htaccess file as set by apache config
+	 */
 	static $htaccess_file = ".htaccess";
 
 	/**

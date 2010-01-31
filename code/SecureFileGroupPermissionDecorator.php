@@ -16,6 +16,12 @@ class SecureFileGroupPermissionDecorator extends DataObjectDecorator {
 		);
 	}
 
+	/**
+	 * View permission check
+	 * 
+	 * @param Member $member
+	 * @return noolean
+	 */
 	function canView(Member $member = null) {
 		if($this->owner->basicViewChecks($member))
 			return true;
@@ -24,6 +30,11 @@ class SecureFileGroupPermissionDecorator extends DataObjectDecorator {
 		return $member->inGroups($this->owner->AllGroupPermissions());
 	}
 	
+	/**
+	 * Collate permissions for this and all parent folders.
+	 * 
+	 * @return DataObjectSet
+	 */
 	function AllGroupPermissions() {
 		$groupSet = new DataObjectSet();
 		$groups = $this->owner->GroupPermissions();
@@ -35,6 +46,11 @@ class SecureFileGroupPermissionDecorator extends DataObjectDecorator {
 		return $groupSet;
 	}
 	
+	/**
+	 * Collage permissions for all parent folders
+	 * 
+	 * @return DataObjectSet
+	 */
 	function InheritedGroupPermissions() {
 		if($this->owner->ParentID)
 			return $this->owner->Parent()->AllGroupPermissions();
@@ -43,8 +59,11 @@ class SecureFileGroupPermissionDecorator extends DataObjectDecorator {
 	}
 	
 	/**
-	 * Security tab for folders
-	 */
+	 * Adds group select fields to CMS
+	 * 
+ 	 * @param FieldSet $fields
+ 	 * @return void
+ 	 */
 	public function updateCMSFields(FieldSet &$fields) {
 		
 			if(!($this->owner instanceof Folder) || !$this->owner->ID)
@@ -65,8 +84,6 @@ class SecureFileGroupPermissionDecorator extends DataObjectDecorator {
 				$InheritedGroupsField = new ReadonlyField("InheritedGroupPermissionsText", "Inherited Group Permissions", $fieldText);
 				$fields->addFieldToTab('Root.Security', $InheritedGroupsField);
 			}
-				
-
 			
 	}
 	
