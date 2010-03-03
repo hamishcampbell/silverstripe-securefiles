@@ -59,14 +59,6 @@ class SecureFileDecorator extends DataObjectDecorator {
 		}
 	}
 	
-	public function getName() {
-		if($this->owner->canView()) {
-			return "<span class='secureAccessAllowed'>{$this->owner->Title}</span>";
-		} else {
-			return "<span class='secureAccessDenied'>{$this->owner->Title}</span>";
-		}
-	}
-	
 	/**
 	 * Security tab for folders
 	 */
