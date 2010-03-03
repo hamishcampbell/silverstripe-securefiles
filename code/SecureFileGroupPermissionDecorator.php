@@ -72,8 +72,8 @@ class SecureFileGroupPermissionDecorator extends DataObjectDecorator {
 		
 		// Update Security Tab
 		$secureFilesTab = $fields->findOrMakeTab('Root.'._t('SecureFiles.SECUREFILETABNAME', 'Security'));
-		$secureFilesTab->push(new HeaderField('Group Access'));
-		$secureFilesTab->push(new TreeMultiselectField('GroupPermissions', _t('SecureFiles.GROUPACCESS', 'Group Access')));	
+		$secureFilesTab->push(new HeaderField(_t('SecureFiles.GROUPACCESSTITLE', 'Group Access')));
+		$secureFilesTab->push(new TreeMultiselectField('GroupPermissions', _t('SecureFiles.GROUPACCESSFIELD', 'Group Access Permissions')));	
 			
 		if($this->owner->InheritSecured()) {
 			$permissionGroups = $this->owner->InheritedGroupPermissions();
