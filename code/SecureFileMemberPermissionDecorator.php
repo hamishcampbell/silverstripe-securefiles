@@ -82,7 +82,8 @@ class SecureFileMemberPermissionDecorator extends DataObjectDecorator {
 		$secureFilesTab->push($memberTableField = new ManyManyComplexTableField(
 				$this->owner,
 				'MemberPermissions',
-				'Member'
+				'Member',
+				null
 			)
 		);
 		$memberTableField->setPermissions(array());
@@ -90,12 +91,12 @@ class SecureFileMemberPermissionDecorator extends DataObjectDecorator {
 		if($this->owner->InheritSecured()) {
 			$permissionMembers = $this->owner->InheritedMemberPermissions();
 			if($permissionMembers->Count()) {
-				$fieldText = implode(", ", $permissionMembers->map());
+				$fieldText = implode(", ", $permissionMembers->map('ID', 'Name'));
 			} else {
 				$fieldText = _t('SecureFiles.NONE', "(None)");
 			}
 			$InheritedMembersField = new ReadonlyField("InheritedMemberPermissionsText", _t('SecureFiles.MEMBERINHERITEDPERMS', 'Inherited Member Permissions'), $fieldText);
-			$InheritedGroupsField->addExtraClass('prependUnlock');
+			$InheritedMembersField->addExtraClass('prependUnlock');
 			$secureFilesTab->push($InheritedMembersField);
 		}
 	}
