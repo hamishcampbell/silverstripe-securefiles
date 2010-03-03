@@ -67,7 +67,7 @@ class SecureFileGroupPermissionDecorator extends DataObjectDecorator {
 			return;
 			
 		// Only allow ADMIN and SECURE_FILE_SETTINGS members to edit these options
-		if(!Permission::checkMember($member, array('ADMIN', 'SECURE_FILE_SETTINGS')))
+		if(!Permission::checkMember(Member::currentUser(), array('ADMIN', 'SECURE_FILE_SETTINGS')))
 			return;
 		
 		// Update Security Tab
