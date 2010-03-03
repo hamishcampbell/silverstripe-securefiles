@@ -59,14 +59,6 @@ class SecureFileDecorator extends DataObjectDecorator {
 		}
 	}
 	
-	public function getName() {
-		if($this->owner->canView()) {
-			return "<span class='secureAccessAllowed'>{$this->owner->Title}</span>";
-		} else {
-			return "<span class='secureAccessDenied'>{$this->owner->Title}</span>";
-		}
-	}
-	
 	/**
 	 * Security tab for folders
 	 */
@@ -77,7 +69,7 @@ class SecureFileDecorator extends DataObjectDecorator {
 			return;
 		
 		// Only allow ADMIN and SECURE_FILE_SETTINGS members to edit these options
-		if(!Permission::checkMember($member, array('ADMIN', 'SECURE_FILE_SETTINGS')))
+		if(!Permission::checkMember(Member::currentUser(), array('ADMIN', 'SECURE_FILE_SETTINGS')))
 			return; 
 			
 		$secureFilesTab = $fields->findOrMakeTab('Root.'._t('SecureFiles.SECUREFILETABNAME', 'Security'));		
