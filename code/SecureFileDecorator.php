@@ -81,9 +81,12 @@ class SecureFileDecorator extends DataObjectDecorator {
 			return; 
 			
 		$secureFilesTab = $fields->findOrMakeTab('Root.'._t('SecureFiles.SECUREFILETABNAME', 'Security'));		
-		$EnableSecurityField = ($this->InheritSecured()) 
-			? new LiteralField('InheritSecurity', _t('SecureFiles.INHERITED', 'This folder is inheriting security settings from a parent folder.'))
-			: new CheckboxField('Secured', _t('SecureFiles.SECUREFOLDER', 'Folder is secure.'));			
+		if($this->InheritSecured()) {
+			$EnableSecurityField = new ReadonlyField('InheritSecurity', '', _t('SecureFiles.INHERITED', 'This folder is inheriting security settings from a parent folder.'));
+			$EnableSecurityField->addExtraClass('prependLock');
+		} else {
+			$EnableSecurityField = new CheckboxField('Secured', _t('SecureFiles.SECUREFOLDER', 'Folder is secure.'));
+		}			
 		
 		$secureFilesTab->push(new HeaderField(_t('SecureFiles.FOLDERSECURITY', 'Folder Security')));
 		$secureFilesTab->push($EnableSecurityField);

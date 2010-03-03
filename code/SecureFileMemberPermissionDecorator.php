@@ -95,6 +95,7 @@ class SecureFileMemberPermissionDecorator extends DataObjectDecorator {
 				$fieldText = _t('SecureFiles.NONE', "(None)");
 			}
 			$InheritedMembersField = new ReadonlyField("InheritedMemberPermissionsText", _t('SecureFiles.MEMBERINHERITEDPERMS', 'Inherited Member Permissions'), $fieldText);
+			$InheritedGroupsField->addExtraClass('prependUnlock');
 			$secureFilesTab->push($InheritedMembersField);
 		}
 	}
