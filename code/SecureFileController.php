@@ -53,7 +53,12 @@ class SecureFileController extends Controller implements PermissionProvider {
 	 * @return HTTPResponse
 	 */
 	function FileNotFound($body = "") {
-		return new HTTPResponse($body, 404);
+		if(ClassInfo::exists('SS_HTTPResponse')) {
+			return new SS_HTTPResponse($body, 404);
+		} else {
+			return new HTTPResponse($body, 404);	
+		}
+		
 	}
 	
 	/**
@@ -73,7 +78,11 @@ class SecureFileController extends Controller implements PermissionProvider {
 	 * @see HTTPRequest::send_file()
 	 */
 	function FileFound($file) {
-		return HTTPRequest::send_file(file_get_contents($file->FullPath), $file->Filename);
+		if(ClassInfo::exists('SS_HTTPRequest')) {
+			return SS_HTTPRequest::send_file(file_get_contents($file->FullPath), $file->Filename);
+		} else {
+			return HTTPRequest::send_file(file_get_contents($file->FullPath), $file->Filename);	
+		}
 	}	
 	
 	/**
@@ -84,6 +93,7 @@ class SecureFileController extends Controller implements PermissionProvider {
 	function providePermissions() {
 		return array(
 			'SECURE_FILE_ACCESS' => _t('SecureFiles.SECUREFILEACCESS', 'Access to Secured Files'),
+			'SECURE_FILE_SETTINGS' => _t('SecureFiles.SECUREFILESETTINGS', 'Manage File Security Settings')
 		);
 	}
 

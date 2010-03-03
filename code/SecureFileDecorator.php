@@ -16,17 +16,34 @@ class SecureFileDecorator extends DataObjectDecorator {
 		);
 	}
 	
-	function canView($member = null) {
-		if($this->owner->basicViewChecks($member))
-			return true;
-	}
-	
-	function basicViewChecks($member = null) {
+	/**
+	 * canViewSecured informs Secure Files whether the user has access to this folder
+	 * Note that unlike canView, this searches for any ALLOWED permission, whereas canView will
+	 * look for a disallow condition. Implementing canViewSecured allows additional decorators
+	 * to provide new access permissions.
+	 * 
+	 * @param Member $member
+	 * @return boolean
+	 */
+	function canViewSecured($member = null) {
 		if(Permission::checkMember($member, array('ADMIN', 'SECURE_FILE_ACCESS'))) 
 			return true;
 		if(!$this->owner->Secured && !$this->owner->InheritSecured())
 			return true;
+		return false;
 	}
+	
+	/**
+	 * Searches for a valid access permission on applied file decorators
+	 * 
+	 * @param Member $member
+	 * @return boolean
+	 */
+	function canView($member = null) {
+		$values = $this->owner->extend('canViewSecured', $member);
+		return max($values);
+	}
+
 	
 	/**
 	 * Are any of this file's parent folders secured
@@ -47,9 +64,14 @@ class SecureFileDecorator extends DataObjectDecorator {
 	 */
 	public function updateCMSFields(FieldSet &$fields) {
 		
+		// Only modify folder objects with parent nodes
 		if(!($this->owner instanceof Folder) || !$this->owner->ID)
 			return;
 		
+		// Only allow ADMIN and SECURE_FILE_SETTINGS members to edit these options
+		if(!Permission::checkMember($member, array('ADMIN', 'SECURE_FILE_SETTINGS')))
+			return; 
+			
 		$EnableSecurityField = ($this->InheritSecured()) 
 			? new LiteralField('InheritSecurity', _t('SecureFiles.INHERITED', 'This folder is inheriting security settings from a parent folder.'))
 			: new CheckboxField('Secured', _t('SecureFiles.SECUREFOLDER', 'Folder is secure.'));			

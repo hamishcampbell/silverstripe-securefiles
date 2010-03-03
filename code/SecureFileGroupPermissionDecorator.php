@@ -22,12 +22,9 @@ class SecureFileGroupPermissionDecorator extends DataObjectDecorator {
 	 * @param Member $member
 	 * @return noolean
 	 */
-	function canView(Member $member = null) {
-		if($this->owner->basicViewChecks($member))
-			return true;
-		if(!$member)
-			return false;
-		return $member->inGroups($this->owner->AllGroupPermissions());
+	function canViewSecured(Member $member = null) {
+		if($member)
+			return $member->inGroups($this->owner->AllGroupPermissions());
 	}
 	
 	/**
@@ -66,24 +63,29 @@ class SecureFileGroupPermissionDecorator extends DataObjectDecorator {
  	 */
 	public function updateCMSFields(FieldSet &$fields) {
 		
-			if(!($this->owner instanceof Folder) || !$this->owner->ID)
-				return;
-
-			$GroupTreeField = new TreeMultiselectField('GroupPermissions', 'Group Access');	
-			
-			$fields->addFieldToTab('Root.Security',	new HeaderField('Group Access'));
-			$fields->addFieldToTab('Root.Security', $GroupTreeField);	
+		// Only modify folder objects with parent nodes
+		if(!($this->owner instanceof Folder) || !$this->owner->ID)
+			return;
+		
+		// Only allow ADMIN and SECURE_FILE_SETTINGS members to edit these options
+		if(!Permission::checkMember($member, array('ADMIN', 'SECURE_FILE_SETTINGS')))
+			return; 
 				
-			if($this->owner->InheritSecured()) {
-				$permissionGroups = $this->owner->InheritedGroupPermissions();
-				if($permissionGroups->Count()) {
-					$fieldText = implode(", ", $permissionGroups->map());
-				} else {
-					$fieldText = "(None)";
-				}
-				$InheritedGroupsField = new ReadonlyField("InheritedGroupPermissionsText", "Inherited Group Permissions", $fieldText);
-				$fields->addFieldToTab('Root.Security', $InheritedGroupsField);
+		$GroupTreeField = new TreeMultiselectField('GroupPermissions', 'Group Access');	
+		
+		$fields->addFieldToTab('Root.Security',	new HeaderField('Group Access'));
+		$fields->addFieldToTab('Root.Security', $GroupTreeField);	
+			
+		if($this->owner->InheritSecured()) {
+			$permissionGroups = $this->owner->InheritedGroupPermissions();
+			if($permissionGroups->Count()) {
+				$fieldText = implode(", ", $permissionGroups->map());
+			} else {
+				$fieldText = "(None)";
 			}
+			$InheritedGroupsField = new ReadonlyField("InheritedGroupPermissionsText", "Inherited Group Permissions", $fieldText);
+			$fields->addFieldToTab('Root.Security', $InheritedGroupsField);
+		}
 			
 	}
 	
