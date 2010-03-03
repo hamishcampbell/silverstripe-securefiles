@@ -17,8 +17,8 @@ class SecureFileDecorator extends DataObjectDecorator {
 	}
 	
 	/**
-	 * canViewSecured informs Secure Files whether the user has access to this folder
-	 * Note that unlike canView, this searches for any ALLOWED permission, whereas canView will
+	 * canViewSecured informs Secure Files whether the user has access to this folder.
+	 * Unlike canView(), this searches for any ALLOWED permission, whereas canView will
 	 * look for a disallow condition. Implementing canViewSecured allows additional decorators
 	 * to provide new access permissions.
 	 * 
@@ -72,12 +72,13 @@ class SecureFileDecorator extends DataObjectDecorator {
 		if(!Permission::checkMember($member, array('ADMIN', 'SECURE_FILE_SETTINGS')))
 			return; 
 			
+		$secureFilesTab = $fields->findOrMakeTab('Root.Security');			
 		$EnableSecurityField = ($this->InheritSecured()) 
 			? new LiteralField('InheritSecurity', _t('SecureFiles.INHERITED', 'This folder is inheriting security settings from a parent folder.'))
 			: new CheckboxField('Secured', _t('SecureFiles.SECUREFOLDER', 'Folder is secure.'));			
 		
-		$fields->addFieldToTab('Root.Security',	new HeaderField('Folder Security'));
-		$fields->addFieldToTab('Root.Security', $EnableSecurityField);
+		$secureFilesTab->push(new HeaderField('Folder Security'));
+		$secureFilesTab->push($EnableSecurityField);
 	
 	}
 

@@ -23,8 +23,7 @@ class SecureFileGroupPermissionDecorator extends DataObjectDecorator {
 	 * @return noolean
 	 */
 	function canViewSecured(Member $member = null) {
-		if($member)
-			return $member->inGroups($this->owner->AllGroupPermissions());
+		return $member ? $member->inGroups($this->owner->AllGroupPermissions()) : false;
 	}
 	
 	/**
@@ -66,15 +65,14 @@ class SecureFileGroupPermissionDecorator extends DataObjectDecorator {
 		// Only modify folder objects with parent nodes
 		if(!($this->owner instanceof Folder) || !$this->owner->ID)
 			return;
-		
-		// Only allow ADMIN and SECURE_FILE_SETTINGS members to edit these options
+			
+		//Only allow ADMIN and SECURE_FILE_SETTINGS members to edit these options
 		if(!Permission::checkMember($member, array('ADMIN', 'SECURE_FILE_SETTINGS')))
-			return; 
-				
-		$GroupTreeField = new TreeMultiselectField('GroupPermissions', 'Group Access');	
-		
-		$fields->addFieldToTab('Root.Security',	new HeaderField('Group Access'));
-		$fields->addFieldToTab('Root.Security', $GroupTreeField);	
+			return;
+			
+		$secureFilesTab = $fields->findOrMakeTab('Root.Security');
+		$secureFilesTab->push(new HeaderField('Group Access'));
+		$secureFilesTab->push(new TreeMultiselectField('GroupPermissions', 'Group Access'));	
 			
 		if($this->owner->InheritSecured()) {
 			$permissionGroups = $this->owner->InheritedGroupPermissions();
@@ -84,9 +82,9 @@ class SecureFileGroupPermissionDecorator extends DataObjectDecorator {
 				$fieldText = "(None)";
 			}
 			$InheritedGroupsField = new ReadonlyField("InheritedGroupPermissionsText", "Inherited Group Permissions", $fieldText);
-			$fields->addFieldToTab('Root.Security', $InheritedGroupsField);
+			$secureFilesTab->push($InheritedGroupsField);
 		}
-			
+
 	}
 	
 }
