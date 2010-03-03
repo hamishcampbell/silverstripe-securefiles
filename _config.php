@@ -7,10 +7,9 @@
  * @copyright copyright (c) 2010, Hamish Campbell
  */
 
-// CONTORLLER RULE, DO NOT MODIFY
 Director::addRules(50, array(ASSETS_DIR . '/$Action' => 'SecureFileController'));
+AssetAdmin::require_css('securefiles/css/SecureFiles.css');
 // -------------------------------
-
 
 /**
  *  Apply optional permission methods here. Include them in the reverse
@@ -19,6 +18,6 @@ Director::addRules(50, array(ASSETS_DIR . '/$Action' => 'SecureFileController'))
 // DataObject::add_extension('File', 'SecureFileMemberPermissionDecorator');
 // DataObject::add_extension('File', 'SecureFileGroupPermissionDecorator');
 
-// BASE DECORATOR, DO NOT MODIFY
-DataObject::add_extension('File', 'SecureFileDecorator');
 // -------------------------------
+DataObject::add_extension('File', 'SecureFileDecorator');
+
