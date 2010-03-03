@@ -1,11 +1,21 @@
 <?php
 global $lang;
 
-$lang['en_US']['SecureFiles']['VIEW'] = 'View';
-$lang['en_US']['SecureFiles']['SECUREFOLDER'] = 'Folder is secure.';
-$lang['en_US']['SecureFiles']['ALLPERMISSIONS'] = 'All Permissions';
+$lang['en_US']['SecureFiles']['SECUREFILEACCESS'] = 'Access to Secured Files';
+$lang['en_US']['SecureFiles']['SECUREFILESETTINGS'] = 'Manage File Security Settings';
+$lang['en_US']['SecureFiles']['SECUREFILETABNAME'] = 'Security';
 $lang['en_US']['SecureFiles']['INHERITED'] = 'This folder is inheriting security settings from a parent folder.';
-$lang['en_US']['SecureFiles']['INHERITIEDINFO'] = 'These permissions summarise the permissions settings on ' . 
-		'this folder and all parent folders with permissions set. Note that "NO" settings always take precendence ' .
-		'over "YES" settings';
+$lang['en_US']['SecureFiles']['SECUREFOLDER'] = 'Folder is secure.';
+$lang['en_US']['SecureFiles']['FOLDERSECURITY'] = 'Folder Security';
+
+$lang['en_US']['SecureFiles']['NONE'] = '(None)';
+
+// GROUP PERMISSION
+$lang['en_US']['SecureFiles']['GROUPACCESSTITLE'] = 'Group Access';
+$lang['en_US']['SecureFiles']['GROUPACCESSFIELD'] = 'Group Access Permissions';
+$lang['en_US']['SecureFiles']['GROUPINHERITEDPERMS'] = 'Inherited Group Permissions';
+
+// MEMBER PERMISSOIN
+$lang['en_US']['SecureFiles']['MEMBERACCESSTITLE'] = 'Member Access';
+$lang['en_US']['SecureFiles']['EMBERINHERITEDPERMS'] = 'Inherited Member Permissions';
 ?>
