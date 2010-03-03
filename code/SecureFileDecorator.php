@@ -72,12 +72,12 @@ class SecureFileDecorator extends DataObjectDecorator {
 		if(!Permission::checkMember($member, array('ADMIN', 'SECURE_FILE_SETTINGS')))
 			return; 
 			
-		$secureFilesTab = $fields->findOrMakeTab('Root.Security');			
+		$secureFilesTab = $fields->findOrMakeTab('Root.'._t('SecureFiles.SECUREFILETABNAME', 'Security'));		
 		$EnableSecurityField = ($this->InheritSecured()) 
 			? new LiteralField('InheritSecurity', _t('SecureFiles.INHERITED', 'This folder is inheriting security settings from a parent folder.'))
 			: new CheckboxField('Secured', _t('SecureFiles.SECUREFOLDER', 'Folder is secure.'));			
 		
-		$secureFilesTab->push(new HeaderField('Folder Security'));
+		$secureFilesTab->push(new HeaderField(_t('SecureFiles.FOLDERSECURITY', 'Folder Security')));
 		$secureFilesTab->push($EnableSecurityField);
 	
 	}
@@ -103,4 +103,4 @@ class SecureFileDecorator extends DataObjectDecorator {
 	}
 	
 }
-?>
+

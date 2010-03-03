@@ -66,28 +66,24 @@ class SecureFileGroupPermissionDecorator extends DataObjectDecorator {
 		if(!($this->owner instanceof Folder) || !$this->owner->ID)
 			return;
 			
-		//Only allow ADMIN and SECURE_FILE_SETTINGS members to edit these options
+		// Only allow ADMIN and SECURE_FILE_SETTINGS members to edit these options
 		if(!Permission::checkMember($member, array('ADMIN', 'SECURE_FILE_SETTINGS')))
 			return;
-			
-		$secureFilesTab = $fields->findOrMakeTab('Root.Security');
+		
+		// Update Security Tab
+		$secureFilesTab = $fields->findOrMakeTab('Root.'._t('SecureFiles.SECUREFILETABNAME', 'Security'));
 		$secureFilesTab->push(new HeaderField('Group Access'));
-		$secureFilesTab->push(new TreeMultiselectField('GroupPermissions', 'Group Access'));	
+		$secureFilesTab->push(new TreeMultiselectField('GroupPermissions', _t('SecureFiles.GROUPACCESS', 'Group Access')));	
 			
 		if($this->owner->InheritSecured()) {
 			$permissionGroups = $this->owner->InheritedGroupPermissions();
 			if($permissionGroups->Count()) {
 				$fieldText = implode(", ", $permissionGroups->map());
 			} else {
-				$fieldText = "(None)";
+				$fieldText = _t('SecureFiles.NONE', "(None)");
 			}
-			$InheritedGroupsField = new ReadonlyField("InheritedGroupPermissionsText", "Inherited Group Permissions", $fieldText);
+			$InheritedGroupsField = new ReadonlyField("InheritedGroupPermissionsText", _t('SecureFiles.GROUPINHERITEDPERMS', 'Inherited Group Permissions'), $fieldText);
 			$secureFilesTab->push($InheritedGroupsField);
 		}
-
 	}
-	
 }
-
-
-?>

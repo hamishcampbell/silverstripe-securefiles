@@ -98,4 +98,3 @@ class SecureFileController extends Controller implements PermissionProvider {
 	}
 
 }
-?>
