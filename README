@@ -11,7 +11,7 @@ Hamish Campbell
 
 Requirements
 -----------------------------------------------
-SilverStripe 2.3
+SilverStripe 2.3,x, 2.4
 
 Documentation
 -----------------------------------------------
@@ -22,6 +22,9 @@ Installation Instructions
 1. Extract the module to your website directory.
 
 2. Run /dev/build?flush=1
+
+3. Optionally apply the additional permission modes
+   listed in _config.php
 
 Usage Overview
 -----------------------------------------------
