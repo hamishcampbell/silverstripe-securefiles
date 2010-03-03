@@ -7,7 +7,6 @@
  * @copyright copyright (c) 2010, Hamish Campbell
  */
 
-
 // CONTORLLER RULE, DO NOT MODIFY
 Director::addRules(50, array(ASSETS_DIR . '/$Action' => 'SecureFileController'));
 // -------------------------------
@@ -23,5 +22,3 @@ Director::addRules(50, array(ASSETS_DIR . '/$Action' => 'SecureFileController'))
 // BASE DECORATOR, DO NOT MODIFY
 DataObject::add_extension('File', 'SecureFileDecorator');
 // -------------------------------
-
-?>
