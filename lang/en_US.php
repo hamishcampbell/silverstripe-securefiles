@@ -18,4 +18,3 @@ $lang['en_US']['SecureFiles']['GROUPINHERITEDPERMS'] = 'Inherited Group Permissi
 // MEMBER PERMISSOIN
 $lang['en_US']['SecureFiles']['MEMBERACCESSTITLE'] = 'Member Access';
 $lang['en_US']['SecureFiles']['EMBERINHERITEDPERMS'] = 'Inherited Member Permissions';
-?>
