@@ -14,6 +14,13 @@ class SecureFileController extends Controller implements PermissionProvider {
 	static $htaccess_file = ".htaccess";
 
 	/**
+	 * Size limit (bytes) before using alternative file
+	 * send technique. Defaults to 50 kb.
+	 * @var int 
+	 */
+	static $file_size_break_limit = 51200;
+	
+	/**
 	 * Secure files htaccess rules
 	 * 
 	 * @return string
@@ -58,7 +65,6 @@ class SecureFileController extends Controller implements PermissionProvider {
 		} else {
 			return new HTTPResponse($body, 404);	
 		}
-		
 	}
 	
 	/**
@@ -76,12 +82,35 @@ class SecureFileController extends Controller implements PermissionProvider {
 	 *
 	 * @param $file File to send
 	 * @see HTTPRequest::send_file()
+	 * @todo clean up
 	 */
 	function FileFound($file) {
-		if(ClassInfo::exists('SS_HTTPRequest')) {
-			return SS_HTTPRequest::send_file(file_get_contents($file->FullPath), $file->Filename);
+		if($file->getAbsoluteSize() > self::$file_size_break_limit) {
+			$mimeType = HTTP::getMimeType($file->Filename);
+			header("Content-Type: {$mimeType}; name=\"" . addslashes($file->Filename) . "\"");
+			header("Content-Disposition: attachment; filename=" . addslashes($file->Filename));
+			header("Content-Length: {$file->getAbsoluteSize()}");
+			header("Pragma: ");
+			
+			session_write_close();
+			
+			if($file = fopen($file->getFullPath(), 'rb')) {
+				while(!feof($file) && !connection_aborted()) {
+					print(fread($file, 1024*8));
+					ob_flush();
+            		flush();
+				}
+				fclose($file);
+			}
+			exit();			
 		} else {
-			return HTTPRequest::send_file(file_get_contents($file->FullPath), $file->Filename);	
+			if(ClassInfo::exists('SS_HTTPRequest')) {
+				// >= 2.4
+				return SS_HTTPRequest::send_file(file_get_contents($file->FullPath), $file->Filename);
+			} else {
+				// < 2.4
+				return HTTPRequest::send_file(file_get_contents($file->FullPath), $file->Filename);	
+			}
 		}
 	}	
 	
