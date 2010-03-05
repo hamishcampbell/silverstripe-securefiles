@@ -20,7 +20,7 @@ class SecureFileMemberPermissionDecorator extends DataObjectDecorator {
 	 * View permission check
 	 * 
 	 * @param Member $member
-	 * @return noolean
+	 * @return boolean
 	 */
 	function canViewSecured(Member $member = null) {
 		if($member) {
