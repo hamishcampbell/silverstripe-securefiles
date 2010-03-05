@@ -9,6 +9,7 @@ $lang['en_US']['SecureFiles']['SECUREFOLDER'] = 'Folder is secure.';
 $lang['en_US']['SecureFiles']['FOLDERSECURITY'] = 'Folder Security';
 
 $lang['en_US']['SecureFiles']['NONE'] = '(None)';
+$lang['en_US']['SecureFiles']['NEVEREXPIRES'] =  'Never';
 
 // GROUP PERMISSION
 $lang['en_US']['SecureFiles']['GROUPACCESSTITLE'] = 'Group Access';
@@ -19,3 +20,6 @@ $lang['en_US']['SecureFiles']['GROUPINHERITEDPERMS'] = 'Inherited Group Permissi
 $lang['en_US']['SecureFiles']['MEMBERACCESSTITLE'] = 'Member Access';
 $lang['en_US']['SecureFiles']['MEMBERINHERITEDPERMS'] = 'Inherited Member Permissions';
 
+// TOKEN PERMISSION
+$lang['en_US']['SecureFiles']['TOKENACCESSTITLE'] = 'Token Access';
+$lang['en_US']['SecureFiles']['NOFILESINFOLDER'] = 'There are no files in this folder.';
