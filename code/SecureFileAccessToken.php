@@ -109,7 +109,13 @@ class SecureFileAccessToken extends DataObject {
 		$fields->push($root = new TabSet('Root'));
 		$root->push($main = new Tab('Main'));
 		$main->push($fileField);
-		$main->push(new DatetimeField('Expiry', 'Expiry'));
+		if(ClassInfo::exists('DatetimeField')) {
+			// 2.4.x
+			$main->push(new DatetimeField('Expiry', 'Expiry'));
+		} else {
+			// 2.3.x
+			$main->push(new PopupDateTimeField('Expiry', 'Expiry'));
+		}
 		if($this->ID)
 			$main->push(new ReadonlyField('Token', 'Token'));
 		$this->extend('updateCMSFields', $fields);
