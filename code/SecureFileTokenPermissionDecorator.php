@@ -26,7 +26,7 @@ class SecureFileTokenPermissionDecorator extends DataObjectDecorator {
 		if(!isset($_REQUEST['token']))
 			return false;
 		$token_SQL = Convert::raw2sql($_REQUEST['token']);
-		$tokens = $this->owner->AccessTokens("\"Token\" = '{$token_SQL}' AND (\"Expiry\" IS NULL OR \"Expiry\" > NOW())");
+		$tokens = $this->owner->AccessTokens("Token = '{$token_SQL}' AND (Expiry IS NULL OR Expiry > NOW())");
 		return $tokens->exists();
 	}
 	
@@ -37,7 +37,7 @@ class SecureFileTokenPermissionDecorator extends DataObjectDecorator {
 	public function containsFiles() {
 		if(!($this->owner instanceof Folder))
 			return false;
-		return (bool)DB::query("SELECT COUNT(*) FROM \"File\" WHERE ParentID = "
+		return (bool)DB::query("SELECT COUNT(*) FROM File WHERE ParentID = "
 			. (int)$this->owner->ID . " AND ClassName NOT IN ('". implode("','", array_values(ClassInfo::subclassesFor('Folder'))) . "')")->value();		
 	}
 	
@@ -72,9 +72,9 @@ class SecureFileTokenPermissionDecorator extends DataObjectDecorator {
 			'SecureFileAccessToken',
 			null,
 			null,
-			"\"File\".\"ParentID\" = '{$this->owner->ID}'",
+			"File.ParentID = '{$this->owner->ID}'",
 			$sourceSort = null,
-			"JOIN \"File\" ON \"FileID\" = \"File\".\"ID\""
+			"JOIN File ON FileID = File.ID"
 		));
 		$tokenList->setParentIdName('FolderID');
 		$tokenList->setRelationAutoSetting(false);
