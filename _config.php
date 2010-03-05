@@ -17,6 +17,7 @@ AssetAdmin::require_css('securefiles/css/SecureFiles.css');
  */
 // DataObject::add_extension('File', 'SecureFileMemberPermissionDecorator');
 // DataObject::add_extension('File', 'SecureFileGroupPermissionDecorator');
+// DataObject::add_extension('File', 'SecureFileTokenPermissionDecorator');
 
 // -------------------------------
 DataObject::add_extension('File', 'SecureFileDecorator');
