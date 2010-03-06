@@ -26,7 +26,10 @@ class SecureFileTokenPermissionDecorator extends DataObjectDecorator {
 		if(!isset($_REQUEST['token']))
 			return false;
 		$token_SQL = Convert::raw2sql($_REQUEST['token']);
-		$tokens = $this->owner->AccessTokens("Token = '{$token_SQL}' AND (Expiry IS NULL OR Expiry > NOW())");
+		$memberFilter_SQL = "(MemberID IS NULL OR MemberID = 0)";
+		if($member)
+			$memberFilter_SQL .= " OR MemberID = '" . (is_object($member) ? $member->ID : (int)$member) . "'";
+		$tokens = $this->owner->AccessTokens("Token = '{$token_SQL}' AND (Expiry IS NULL OR Expiry > NOW()) AND ({$memberFilter_SQL})");
 		return $tokens->exists();
 	}
 	
@@ -34,7 +37,7 @@ class SecureFileTokenPermissionDecorator extends DataObjectDecorator {
 	 * Returns true if the folder contains files
 	 * @return boolean
 	 */
-	public function containsFiles() {
+	protected function containsFiles() {
 		if(!($this->owner instanceof Folder))
 			return false;
 		return (bool)DB::query("SELECT COUNT(*) FROM File WHERE ParentID = "
@@ -86,17 +89,21 @@ class SecureFileTokenPermissionDecorator extends DataObjectDecorator {
 	}
 	
 	/**
-	 * Create and return a new access token for a file.
+	 * API method to create and return a new access token for a file.
+	 * 
 	 * @param $expiry int|string Either a unix timestamp or a strtotime compatable datetime string
+	 * @param $member int|Member Either a valid member ID or a member object
 	 * @return SecureFileAccessToken
 	 */
-	function generateAccessToken($expiry = null) {
+	public function generateAccessToken($expiry = null, $member = null) {
 		if($this->owner instanceof Folder)
 			return false;
 		$token = new SecureFileAccessToken();
 		$token->FileID = $this->owner->ID;
 		if($expiry)
 			$token->Expiry = is_int($expiry) ? $expiry : strtotime($expiry);
+		if($member)
+			$token->MemberID = is_object($member) ? $member->ID : (int)$member;
 		$token->write();
 		$this->extend('onAfterGenerateToken', $token);
 		return $token;

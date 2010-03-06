@@ -20,6 +20,7 @@ class SecureFileAccessToken extends DataObject {
 	
 	static $has_one = array(
 		'File' => 'File',
+		'Member' => 'Member',
 	);
 	
 	static $has_many = array(
@@ -33,19 +34,21 @@ class SecureFileAccessToken extends DataObject {
 	
 	static $summary_fields = array(
 		'Name' => 'Name', 
+		'MemberNice' => 'Member',
 		'ExpiryNice' => 'Expiry', 
 		'TokenedAbsoluteURL' => 'URL'
 	);
 
 	static $casting = array(
 		'ExpiryNice' => 'Varchar',
+		'MemberNice' => 'Varchar',
 	);
 	
 	/**
 	 * Get the file name for this access token record
 	 * @return string
 	 */
-	function getName() {
+	public function getName() {
 		return $this->File()->Name;
 	}
 
@@ -53,7 +56,7 @@ class SecureFileAccessToken extends DataObject {
 	 * Get the URL for this access token record
 	 * @return string
 	 */
-	function getURL() {
+	public function getURL() {
 		return $this->File()->URL;		
 	}
 	
@@ -61,7 +64,7 @@ class SecureFileAccessToken extends DataObject {
 	 * Get the absolute tokened URL path to access this file
 	 * @return string
 	 */
-	function getTokenedAbsoluteURL() {
+	public function getTokenedAbsoluteURL() {
 		return Controller::join_links(Director::absoluteBaseURL() . $this->File()->getFilename(), "?token=" . $this->Token);
 	}
 	
@@ -69,7 +72,7 @@ class SecureFileAccessToken extends DataObject {
 	 * Get the relative tokened URL path to access this file
 	 * @return string
 	 */
-	function getTokenedURL() {
+	public function getTokenedURL() {
 		return Controller::join_links($this->File()->URL, "?token=" . $this->Token);
 	}
 	
@@ -77,13 +80,24 @@ class SecureFileAccessToken extends DataObject {
 	 * Return a nicely formatted expiry time
 	 * @return string
 	 */
-	function ExpiryNice() {
+	protected function ExpiryNice() {
 		if($this->Expiry) {
 			$expiry = $this->dbObject('Expiry');
 			return $expiry->Ago();
 		} else {
 			return _t('SecureFiles.NEVEREXPIRES', 'Never');
 		}
+	}
+	
+	/**
+	 * Return a nicely formatted description of the member who has access
+	 * @return string
+	 */
+	protected function MemberNice() {
+		if($this->MemberID)
+			return $this->Member()->Name;
+		else
+			return _t('SecureFiles.EVERYONE', 'Everyone');
 	}
 	
 	function getCMSFields() {
@@ -116,6 +130,7 @@ class SecureFileAccessToken extends DataObject {
 			// 2.3.x
 			$main->push(new PopupDateTimeField('Expiry', 'Expiry'));
 		}
+		$main->push(new ReadonlyField('MemberDummyField', 'Member', $this->MemberNice()));
 		if($this->ID)
 			$main->push(new ReadonlyField('Token', 'Token'));
 		$this->extend('updateCMSFields', $fields);
