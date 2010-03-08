@@ -14,11 +14,18 @@ class SecureFileController extends Controller implements PermissionProvider {
 	static $htaccess_file = ".htaccess";
 
 	/**
-	 * Size limit (bytes) before using alternative file
-	 * send technique. Defaults to 50 kb.
-	 * @var int 
+	 * Size of output chunks in kb
+	 * @var integer
 	 */
-	static $file_size_break_limit = 51200;
+	static $chuck_size_kb = 32;
+	
+	/**
+	 * Use X-Sendfile header method
+	 * Requires either Lighttpd or mod_xsendfile for Apache
+	 * Check support for other software
+	 * @var boolean
+	 */
+	protected static $use_x_sendfile = false;
 	
 	/**
 	 * Secure files htaccess rules
@@ -36,6 +43,15 @@ class SecureFileController extends Controller implements PermissionProvider {
 		return $rewrite;
 	}
 
+	/**
+	 * Tell Secure Files to use X-Sendfile headers instead
+	 * Requires either Lighttpd or mod_xsendfile for Apache
+	 * @param boolean $value
+	 */
+	static function UseXSendFile($value) {
+		self::$use_x_sendfile = (bool)$value;
+	}
+		
 	/**
 	 * Process incoming requests passed to this controller
 	 * 
@@ -85,31 +101,34 @@ class SecureFileController extends Controller implements PermissionProvider {
 	 * @todo clean up
 	 */
 	function FileFound($file) {
-		if($file->getAbsoluteSize() > self::$file_size_break_limit) {
-			$mimeType = HTTP::getMimeType($file->Filename);
-			header("Content-Type: {$mimeType}; name=\"" . addslashes($file->Filename) . "\"");
-			header("Content-Disposition: attachment; filename=" . addslashes($file->Filename));
-			header("Content-Length: {$file->getAbsoluteSize()}");
-			header("Pragma: ");
-			
-			session_write_close();
-			
-			if($file = fopen($file->getFullPath(), 'rb')) {
-				while(!feof($file) && !connection_aborted()) {
-					print(fread($file, 1024*8));
-					ob_flush();
-            		flush();
-				}
-				fclose($file);
-			}
+
+		$mimeType = HTTP::getMimeType($file->Filename);
+		header("Content-Type: {$mimeType}; name=\"" . addslashes($file->Filename) . "\"");
+		header("Content-Disposition: attachment; filename=" . addslashes($file->Filename));
+		header("Content-Length: {$file->getAbsoluteSize()}");
+		header("Pragma: ");
+		
+		if(self::$use_x_sendfile) {
+			header('X-Sendfile: '.$file->Filename);
 			exit();			
 		} else {
-			if(ClassInfo::exists('SS_HTTPRequest')) {
-				// >= 2.4
-				return SS_HTTPRequest::send_file(file_get_contents($file->FullPath), $file->Filename);
+			if($filePointer = fopen($file->getFullPath(), 'rb')) {
+				session_write_close();
+				ob_flush();
+	   			flush();
+	   		
+	   			// Push the file while not EOF and connection exists
+				while(!feof($filePointer) && !connection_aborted()) {
+					print(fread($filePointer, 1024 * self::$chuck_size_kb));
+					ob_flush();
+	           		flush();
+				}
+				
+				fclose($filePointer);
+				exit();
 			} else {
-				// < 2.4
-				return HTTPRequest::send_file(file_get_contents($file->FullPath), $file->Filename);	
+				// Edge case - either not found anymore or can't read
+				return $this->FileNotFound();
 			}
 		}
 	}	
