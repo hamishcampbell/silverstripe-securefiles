@@ -100,10 +100,8 @@ class SecureFileController extends Controller implements PermissionProvider {
 	 * File found response
 	 *
 	 * @param $file File to send
-	 * @see HTTPRequest::send_file()
-	 * @todo clean up
 	 */
-	function FileFound($file) {
+	function FileFound(File $file) {
 
 		$mimeType = HTTP::getMimeType($file->Filename);
 		header("Content-Type: {$mimeType}; name=\"" . addslashes($file->Filename) . "\"");
