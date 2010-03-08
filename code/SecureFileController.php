@@ -14,15 +14,13 @@ class SecureFileController extends Controller implements PermissionProvider {
 	static $htaccess_file = ".htaccess";
 
 	/**
-	 * Size of output chunks in kb
+	 * Size of output chunks in kb while in PHP fread mode.
 	 * @var integer
 	 */
 	static $chuck_size_kb = 32;
 	
 	/**
-	 * Use X-Sendfile header method
-	 * Requires either Lighttpd or mod_xsendfile for Apache
-	 * Check support for other software
+	 * Use X-Sendfile header mode instead of PHP fread mode.
 	 * @var boolean
 	 */
 	protected static $use_x_sendfile = false;
@@ -34,6 +32,9 @@ class SecureFileController extends Controller implements PermissionProvider {
 	 */	
 	static function HtaccessRules() {
 		$rewrite = 
+			"<IfModule xsendfile_module>\n" .
+			"XSendFile on \n" . 
+			"</IfModule>\n" .
 			"RemoveHandler .php .phtml .php3 ,php4 .php5 .inc \n" . 
 			"RemoveType .php .phtml .php3 .php4 .php5 .inc \n" .
 			"RewriteEngine On\n" .
@@ -44,8 +45,10 @@ class SecureFileController extends Controller implements PermissionProvider {
 	}
 
 	/**
-	 * Tell Secure Files to use X-Sendfile headers instead
-	 * Requires either Lighttpd or mod_xsendfile for Apache
+	 * Tell Secure Files to use X-Sendfile headers.
+	 * This is quicker than pushing files through PHP but
+	 * requires either Lighttpd or mod_xsendfile for Apache
+	 * @link http://tn123.ath.cx/mod_xsendfile/ 
 	 * @param boolean $value
 	 */
 	static function UseXSendFile($value) {
@@ -109,27 +112,24 @@ class SecureFileController extends Controller implements PermissionProvider {
 		header("Pragma: ");
 		
 		if(self::$use_x_sendfile) {
+			session_write_close();
 			header('X-Sendfile: '.$file->Filename);
 			exit();			
-		} else {
-			if($filePointer = fopen($file->getFullPath(), 'rb')) {
-				session_write_close();
+		} elseif($filePointer = fopen($file->getFullPath(), 'rb')) {
+			session_write_close();
+			ob_flush();
+	   		flush();
+	   		// Push the file while not EOF and connection exists
+			while(!feof($filePointer) && !connection_aborted()) {
+				print(fread($filePointer, 1024 * self::$chuck_size_kb));
 				ob_flush();
-	   			flush();
-	   		
-	   			// Push the file while not EOF and connection exists
-				while(!feof($filePointer) && !connection_aborted()) {
-					print(fread($filePointer, 1024 * self::$chuck_size_kb));
-					ob_flush();
-	           		flush();
-				}
-				
-				fclose($filePointer);
-				exit();
-			} else {
-				// Edge case - either not found anymore or can't read
-				return $this->FileNotFound();
+	        	flush();
 			}
+			fclose($filePointer);
+			exit();
+		} else {
+			// Edge case - either not found anymore or can't read
+			return $this->FileNotFound();
 		}
 	}	
 	
