@@ -36,3 +36,22 @@ Securing files will cause extra load on your
 webserver and your database, as sapphire will check
 the datatabase for access permissions, and pass the
 data through sapphire when it is output to the user.
+
+Recommendations
+-----------------------------------------------
+
+* Disable all Apache Option directives for your 
+  asset folders from your Apache configuration
+  (eg httpd.conf). Prevents directory indexing,
+  includes, symlinking and CGI execution:
+  <Directory /www/assets>
+    Options None
+  </Directory>
+  
+* For large files, streaming media or a general
+  performance boost, use mod_xsendfile (for apache)
+  or lighttpd (uses xsendfile natively). Enable xsendfile
+  headers with Secure Files by adding this to your
+  _config.php:
+  SecureFileController::UseXSendFile(true);
+  
