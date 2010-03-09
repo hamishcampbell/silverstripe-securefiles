@@ -1,4 +1,9 @@
 <?php
+/**
+ * English (United States) language pack
+ * @package securefiles
+ * @subpackage i18n
+ */
 global $lang;
 
 $lang['en_US']['SecureFiles']['SECUREFILEACCESS'] = 'Access to Secured Files';
@@ -7,7 +12,6 @@ $lang['en_US']['SecureFiles']['SECUREFILETABNAME'] = 'Security';
 $lang['en_US']['SecureFiles']['INHERITED'] = 'This folder is inheriting security settings from a parent folder.';
 $lang['en_US']['SecureFiles']['SECUREFOLDER'] = 'Folder is secure.';
 $lang['en_US']['SecureFiles']['FOLDERSECURITY'] = 'Folder Security';
-
 $lang['en_US']['SecureFiles']['NONE'] = '(None)';
 $lang['en_US']['SecureFiles']['NEVEREXPIRES'] =  'Never';
 
