@@ -40,6 +40,11 @@ data through sapphire when it is output to the user.
 Recommendations
 -----------------------------------------------
 
+* This module uses htaccess rules and mod_rewrite.
+  If you're using SilverStripe in rewriteless mode
+  (using the base index.php) or via IIS, DO NOT
+  USE THIS MODULE.
+
 * Disable all Apache Option directives for your 
   asset folders from your Apache configuration
   (eg httpd.conf). Prevents directory indexing,
