@@ -37,7 +37,7 @@ class SecureFileTokenPermissionDecorator extends DataObjectDecorator {
 	 * Returns true if the folder contains files
 	 * @return boolean
 	 */
-	protected function containsFiles() {
+	public function containsFiles() {
 		if(!($this->owner instanceof Folder))
 			return false;
 		return (bool)DB::query("SELECT COUNT(*) FROM File WHERE ParentID = "
