@@ -149,9 +149,9 @@ class SecureFileAccessToken extends DataObject {
 	 * After writing this object, check if it has a valid token. If not, generate one!
 	 */
 	function onBeforeWrite() {
-		parent::onBeforeWrite();
 		if($this->Token == '')
 			$this->Token = $this->generateHash();
+		parent::onBeforeWrite();
 	}
 	
 	
