@@ -35,7 +35,7 @@ class SecureFileController extends Controller implements PermissionProvider {
 			"<IfModule xsendfile_module>\n" .
 			"XSendFile on \n" . 
 			"</IfModule>\n" .
-			"RemoveHandler .php .phtml .php3 ,php4 .php5 .inc \n" . 
+			"RemoveHandler .php .phtml .php3 .php4 .php5 .inc \n" . 
 			"RemoveType .php .phtml .php3 .php4 .php5 .inc \n" .
 			"RewriteEngine On\n" .
 			"RewriteBase " . (BASE_URL ? BASE_URL : "/") . "\n" . 
