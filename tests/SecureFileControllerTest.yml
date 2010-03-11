@@ -1,0 +1,23 @@
+Folder:
+   1:
+      Name: test_secure_folder
+      Parent: 0
+   2:
+      Name: test_unsecure_folder
+      Parent: 0
+   3:
+      Name: test_secure_subfolder
+      Parent: 1
+
+File:
+   file1:
+      Name: secure_file.test
+      Parent: 1
+   file2:
+      Name: unsecure_file.test
+      Parent: 2
+   file3:
+      Name: secure_childfile.test
+      Parent: 3
+
+ 
