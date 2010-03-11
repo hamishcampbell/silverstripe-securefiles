@@ -26,6 +26,13 @@ class SecureFileController extends Controller implements PermissionProvider {
 	protected static $use_x_sendfile = false;
 	
 	/**
+	 * Use SilverStripe send file method. This is inefficient
+	 * and is only provided for testing purposes.
+	 * @var boolean
+	 */
+	protected static $use_ss_sendfile = false;
+	
+	/**
 	 * Secure files htaccess rules
 	 * 
 	 * @return string
@@ -54,7 +61,18 @@ class SecureFileController extends Controller implements PermissionProvider {
 	static function UseXSendFile($value) {
 		self::$use_x_sendfile = (bool)$value;
 	}
-		
+
+	/**
+	 * Tell Secure Files to use internal SilverStripe
+	 * send file method. This is the least efficient method
+	 * but is useful for testing. Not recommend for production
+	 * environments.
+	 * @param boolean $value
+	 */
+	static function UseInternalSendFile($value) {
+		self::$use_ss_sendfile = (bool)$value;
+	}
+	
 	/**
 	 * Process incoming requests passed to this controller
 	 * 
@@ -103,6 +121,16 @@ class SecureFileController extends Controller implements PermissionProvider {
 	 */
 	function FileFound(File $file) {
 
+		// Testing mode - return an HTTPResponse
+		if(self::$use_ss_sendfile) {
+			if(ClassInfo::exists('SS_HTTPRequest')) {
+				return SS_HTTPRequest::send_file(file_get_contents($file->FullPath), $file->Filename);
+			} else {
+				return HTTPRequest::send_file(file_get_contents($file->FullPath), $file->Filename);
+			}
+		}
+
+		// Normal operation:
 		$mimeType = HTTP::getMimeType($file->Filename);
 		header("Content-Type: {$mimeType}; name=\"" . addslashes($file->Filename) . "\"");
 		header("Content-Disposition: attachment; filename=" . addslashes($file->Filename));
