@@ -8,9 +8,9 @@
 global $lang;
 
 $lang['es_ES']['SecureFiles']['SECUREFILEACCESS'] = 'Acceso seguro a los archivos';
-$lang['es_ES']['SecureFiles']['SECUREFILESETTINGS'] = 'Administrar la configuración de seguridad de los archivos';
+$lang['es_ES']['SecureFiles']['SECUREFILESETTINGS'] = 'Administrar la configuraciÃ³n de seguridad de los archivos';
 $lang['es_ES']['SecureFiles']['SECUREFILETABNAME'] = 'Seguridad';
-$lang['es_ES']['SecureFiles']['INHERITED'] = 'Esta carpeta hereda la configuración de seguridad de una carpeta principal.';
+$lang['es_ES']['SecureFiles']['INHERITED'] = 'Esta carpeta hereda la configuraciÃ³n de seguridad de una carpeta principal.';
 $lang['es_ES']['SecureFiles']['SECUREFOLDER'] = 'La carpeta es segura.';
 $lang['es_ES']['SecureFiles']['FOLDERSECURITY'] = 'Seguridad de las carpetas';
 $lang['es_ES']['SecureFiles']['NONE'] = '(Ninguno)';
