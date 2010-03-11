@@ -12,8 +12,19 @@ class SecureFileControllerTest extends FunctionalTest {
 	
 	static $fixture_file = 'securefiles/tests/SecureFileControllerTest.yml';
 	
+	protected $priorAuthenticators = array();
+	
+	protected $priorDefaultAuthenticator = null;	
+	
 	function setUp() {
 		parent::setUp();
+		
+		$this->priorAuthenticators = Authenticator::get_authenticators();
+		$this->priorDefaultAuthenticator = Authenticator::get_default_authenticator();
+		
+		Authenticator::register('MemberAuthenticator');
+		Authenticator::set_default_authenticator('MemberAuthenticator');		
+		
 		if(!file_exists(ASSETS_PATH)) mkdir(ASSETS_PATH);
 
 		/* Create a test folders for each of the fixture references */
@@ -54,6 +65,11 @@ class SecureFileControllerTest extends FunctionalTest {
 			if(file_exists(BASE_PATH."/$file->Filename")) rmdir(BASE_PATH."/$file->Filename");
 		}
 		
+		if(!in_array('MemberAuthenticator', $this->priorAuthenticators)) {
+			Authenticator::unregister('MemberAuthenticator');
+		}
+		Authenticator::set_default_authenticator($this->priorDefaultAuthenticator);		
+		
 		parent::tearDown();
 	}
 
@@ -81,16 +97,14 @@ class SecureFileControllerTest extends FunctionalTest {
 	 * accessed as normal (rational check)
 	 */
 	function testAccessToUnsecureFile() {
-		// This will push the file to the browser and abort the request. Need
-		// to add test mode to the controller so the file is wrapped in the
-		// expected SS_HTTPResonse
-		/**
-		// Test access to secure file restricted:
-		//$secure_file = $this->objFromFixture('File', 'file2');
-		//$response = Director::test($secure_file->AbsoluteURL);
-		//$this->assertEquals($response->getStatusCode(), '200', 'Unsecure files are accessible.');
-		//$this->assertEquals($response->getBody(), file_get_contents($secure_file->AbolutePath()), 'Unsecure files pass body content exactly.');
-		**/		
+		// Ensure the expected response object is returned:
+		SecureFileController::UseInternalSendFile();
+		
+		// Test access to unsecure file:
+		$secure_file = $this->objFromFixture('File', 'file2');
+		$response = Director::test($secure_file->AbsoluteURL);
+		$this->assertEquals($response->getStatusCode(), '200', 'Unsecure files are accessible.');
+		$this->assertEquals($response->getBody(), file_get_contents($secure_file->FullPath), 'Unsecure files pass body content exactly.');
 	}	
 
 	/**
@@ -98,8 +112,9 @@ class SecureFileControllerTest extends FunctionalTest {
 	 * access secure files and that the correct users can.
 	 */
 	function testAccessToSecuredFile() {
-		// See note above
-		/**
+		// Ensure the expected response object is returned:
+		SecureFileController::UseInternalSendFile();
+		
 		$secure_folder = $this->objFromFixture('Folder', '1');
 		$secure_folder->Secured = true;
 		$secure_folder->write();
@@ -118,7 +133,6 @@ class SecureFileControllerTest extends FunctionalTest {
 		
 		$secure_folder->Secured = false;
 		$secure_folder->write();
-		**/
 	}
 	
 	function checkHasHtaccess($folder) {
