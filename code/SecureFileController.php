@@ -58,7 +58,7 @@ class SecureFileController extends Controller implements PermissionProvider {
 	 * @link http://tn123.ath.cx/mod_xsendfile/ 
 	 * @param boolean $value
 	 */
-	static function UseXSendFile($value) {
+	static function UseXSendFile($value = true) {
 		self::$use_x_sendfile = (bool)$value;
 	}
 
@@ -69,7 +69,7 @@ class SecureFileController extends Controller implements PermissionProvider {
 	 * environments.
 	 * @param boolean $value
 	 */
-	static function UseInternalSendFile($value) {
+	static function UseInternalSendFile($value = true) {
 		self::$use_ss_sendfile = (bool)$value;
 	}
 	
