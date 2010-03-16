@@ -37,7 +37,7 @@ class SecureFileController extends Controller implements PermissionProvider {
 	 * 
 	 * @return string
 	 */	
-	static function HtaccessRules() {
+	static function htaccess_content() {
 		$rewrite = 
 			"<IfModule xsendfile_module>\n" .
 			"XSendFile on \n" . 

@@ -98,7 +98,7 @@ class SecureFileDecorator extends DataObjectDecorator {
 		if($this->owner instanceof Folder) {
 			$htaccess = $this->owner->getFullPath().SecureFileController::$htaccess_file;
 			if($this->owner->Secured && !file_exists($htaccess)) {
-				file_put_contents($htaccess, SecureFileController::HtaccessRules());				
+				file_put_contents($htaccess, SecureFileController::htaccess_content());				
 			} elseif(!$this->owner->Secured && file_exists($htaccess)) {
 				unlink($htaccess);
 			}

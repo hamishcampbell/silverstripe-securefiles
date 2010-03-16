@@ -140,7 +140,7 @@ class SecureFileControllerTest extends FunctionalTest {
 		if(!file_exists($htaccess_path))
 			return false;
 		$content = file_get_contents($htaccess_path);
-		return ($content == SecureFileController::HtaccessRules()); 
+		return ($content == SecureFileController::htaccess_content()); 
 	}
 	
 
