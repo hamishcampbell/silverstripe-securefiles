@@ -80,10 +80,12 @@ class SecureFileController extends Controller implements PermissionProvider {
 	 */
 	function handleAction() {
 		$url = array_key_exists('url', $_GET) ? $_GET['url'] : $_SERVER['REQUEST_URI'];
-		$file = File::find(Director::makeRelative($url));
+		$file_path = Director::makeRelative($url);
+		$file = File::find($file_path);
+		
 		if($file instanceof File) {
 			return ($file->canView())
-				? $this->FileFound($file)
+				? $this->FileFound($file, $file_path)
 				: $this->FileNotAuthorized("Not Authorized");
 		} else {
 			return $this->FileNotFound("Not Found");
@@ -118,30 +120,37 @@ class SecureFileController extends Controller implements PermissionProvider {
 	 * File found response
 	 *
 	 * @param $file File to send
+	 * @param $alternate_path string If supplied, return the file from this path instead, for
+	 * example, resampled images.
 	 */
-	function FileFound(File $file) {
+	function FileFound(File $file, $alternate_path = null) {
 
+		// File properties
+		$file_name = $file->Filename;
+		$file_path = Director::getAbsFile($alternate_path ? $alternate_path : $file->FullPath);
+		$file_size = filesize($file_path);
+		
 		// Testing mode - return an HTTPResponse
 		if(self::$use_ss_sendfile) {
 			if(ClassInfo::exists('SS_HTTPRequest')) {
-				return SS_HTTPRequest::send_file(file_get_contents($file->FullPath), $file->Filename);
+				return SS_HTTPRequest::send_file(file_get_contents($file_path), $file_name);
 			} else {
-				return HTTPRequest::send_file(file_get_contents($file->FullPath), $file->Filename);
+				return HTTPRequest::send_file(file_get_contents($file_path), $file_name);
 			}
 		}
 
 		// Normal operation:
-		$mimeType = HTTP::getMimeType($file->Filename);
-		header("Content-Type: {$mimeType}; name=\"" . addslashes($file->Filename) . "\"");
-		header("Content-Disposition: attachment; filename=" . addslashes($file->Filename));
-		header("Content-Length: {$file->getAbsoluteSize()}");
+		$mimeType = HTTP::getMimeType($file_name);
+		header("Content-Type: {$mimeType}; name=\"" . addslashes($file_name) . "\"");
+		header("Content-Disposition: attachment; filename=" . addslashes($file_name));
+		header("Content-Length: {$file_size}");
 		header("Pragma: ");
 		
 		if(self::$use_x_sendfile) {
 			session_write_close();
-			header('X-Sendfile: '.$file->Filename);
+			header('X-Sendfile: '.$file_path);
 			exit();			
-		} elseif($filePointer = fopen($file->getFullPath(), 'rb')) {
+		} elseif($filePointer = fopen($file_path, 'rb')) {
 			session_write_close();
 			ob_flush();
 	   		flush();
