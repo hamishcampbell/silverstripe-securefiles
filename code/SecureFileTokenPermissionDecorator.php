@@ -108,5 +108,16 @@ class SecureFileTokenPermissionDecorator extends DataObjectDecorator {
 		$this->extend('onAfterGenerateToken', $token);
 		return $token;
 	}
-
+	
+	/**
+	 * When the object is deleted, remove file access tokens that might be hanging around.
+	 * @see sapphire/core/model/DataObjectDecorator#onAfterDelete()
+	 */
+	function onAfterDelete() {
+		$tokens = DataObject::get('SecureFileAccessToken', "FileID = '".Convert::raw2sql($this->owner->ID)."'");
+		if($tokens)
+			foreach($tokens as $token)
+				$token->delete();
+	}
+	
 }
