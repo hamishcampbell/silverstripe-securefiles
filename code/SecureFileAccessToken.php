@@ -125,10 +125,12 @@ class SecureFileAccessToken extends DataObject {
 		$main->push($fileField);
 		if(ClassInfo::exists('DatetimeField')) {
 			// 2.4.x
-			$main->push(new DatetimeField('Expiry', 'Expiry'));
+			$main->push($expiry_field = new DatetimeField('Expiry', 'Expiry'));
+			$expiry_field->getDateField()->setConfig('showcalendar', true);
+			$expiry_field->getTimeField()->setConfig('showdropdown', true);
 		} else {
 			// 2.3.x
-			$main->push(new PopupDateTimeField('Expiry', 'Expiry'));
+			$main->push($expiry_field = new PopupDateTimeField('Expiry', 'Expiry'));
 		}
 		$main->push(new ReadonlyField('MemberDummyField', 'Member', $this->MemberNice()));
 		if($this->ID)
