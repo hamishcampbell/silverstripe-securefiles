@@ -14,7 +14,7 @@ $lang['fi_FI']['SecureFiles']['INHERITED'] = 'Tämä kansio perii yläkansion tu
 $lang['fi_FI']['SecureFiles']['SECUREFOLDER'] = 'Kansio on turvallinen.';
 $lang['fi_FI']['SecureFiles']['FOLDERSECURITY'] = 'Kansion turvallisuus';
 $lang['fi_FI']['SecureFiles']['NONE'] = '(Tyhjä)';
-$lang['en_US']['SecureFiles']['NEVEREXPIRES'] =  'Ei vanhene';
+$lang['fi_FI']['SecureFiles']['NEVEREXPIRES'] =  'Ei vanhene';
 
 // GROUP PERMISSION
 $lang['fi_FI']['SecureFiles']['GROUPACCESSTITLE'] = 'Ryhmän pääsyoikeudet';

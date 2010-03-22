@@ -14,7 +14,7 @@ $lang['sv_SE']['SecureFiles']['INHERITED'] = 'Denna mapp ärver säkerhetsinstä
 $lang['sv_SE']['SecureFiles']['SECUREFOLDER'] = 'Mappen är säker.';
 $lang['sv_SE']['SecureFiles']['FOLDERSECURITY'] = 'Mappsäkerhet';
 $lang['sv_SE']['SecureFiles']['NONE'] = '(Inget)';
-$lang['en_US']['SecureFiles']['NEVEREXPIRES'] =  'Aldrig';
+$lang['sv_SE']['SecureFiles']['NEVEREXPIRES'] =  'Aldrig';
 
 // GROUP PERMISSION
 $lang['sv_SE']['SecureFiles']['GROUPACCESSTITLE'] = 'Gruppåtkomst';
