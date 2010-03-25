@@ -1,6 +1,6 @@
 <?php
 /**
- * Secure File Module Configuratoin
+ * Secure File Module Configuration
  *
  * @package securefiles
  * @author Hamish Campbell <hn.campbell@gmail.com>
