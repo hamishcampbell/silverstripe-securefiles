@@ -6,7 +6,6 @@
  * @subpackage tests
  * @author Hamish Campbell <hn.campbell@gmail.com>
  * @copyright copyright (c) 2010, Hamish Campbell
- * @todo Implement 
  */
 class SecureFileControllerTest extends FunctionalTest {
 	
@@ -74,9 +73,7 @@ class SecureFileControllerTest extends FunctionalTest {
 	}
 
 	/**
-	 * @todo Implement - make sure [un]setting security
-	 * writes/deletes htaccess rules correctly. Test only
-	 * ADMIN & SECURE_FILE_SETTINGS users can make these changes
+	 * @todo Check that only ADMIN & SECURE_FILE_SETTINGS users can make these changes
 	 */
 	function testModifyFolderSecurity() {
 		$secure_folder = $this->objFromFixture('Folder', '1');
@@ -92,10 +89,6 @@ class SecureFileControllerTest extends FunctionalTest {
 		$this->assertFalse($this->checkHasHtaccess($secure_folder), 'Secure folder marked as unsecure removes htaccess');
 	}
 	
-	/**
-	 * @todo Implement - Test that unsecured files can be 
-	 * accessed as normal (rational check)
-	 */
 	function testAccessToUnsecureFile() {
 		// Ensure the expected response object is returned:
 		SecureFileController::UseInternalSendFile();
@@ -108,8 +101,7 @@ class SecureFileControllerTest extends FunctionalTest {
 	}	
 
 	/**
-	 * @todo Implement - Test that unauthorised users cannot
-	 * access secure files and that the correct users can.
+	 * @todo Check access based on various permission levels
 	 */
 	function testAccessToSecuredFile() {
 		// Ensure the expected response object is returned:
