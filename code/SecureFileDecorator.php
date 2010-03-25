@@ -3,6 +3,7 @@
  * Adds required fields and methods to File objects
  *
  * @package securefiles
+ * @subpackage default
  * @author Hamish Campbell <hn.campbell@gmail.com>
  * @copyright copyright (c) 2010, Hamish Campbell 
  */
