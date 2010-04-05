@@ -70,5 +70,5 @@ Recommendations
    website or server allows alternative methods of 
    accessing your files or that future changes to 
    your webserver configuration or SilverStripe 
-   installation will allow this protection to be
-   bypassed.
+   installation will now allow this protection to 
+   be bypassed.
