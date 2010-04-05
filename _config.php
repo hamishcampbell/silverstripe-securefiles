@@ -1,6 +1,6 @@
 <?php
 /**
- * Secure File Module Configuration
+ * Secure Files Module Configuration
  *
  * @package securefiles
  * @author Hamish Campbell <hn.campbell@gmail.com>
@@ -35,3 +35,8 @@ DataObject::add_extension('File', 'SecureFileDecorator');
  */
 // SecureFileController::UseXSendFile(true);
 
+/**
+ * For testing or debug purposes, you can force this module to use the internal
+ * Sapphire send file method. Not recommended for production sites.
+ */
+// SecureFileController::UseInternalSendFile(true);
