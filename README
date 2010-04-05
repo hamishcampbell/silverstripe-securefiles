@@ -59,4 +59,16 @@ Recommendations
   headers with Secure Files by adding this to your
   _config.php:
   SecureFileController::UseXSendFile(true);
-  
+ 
+ Disclaimer
+ -----------------------------------------------
+ ADDITIONAL COMMENTARY TO THE LICENSE DISCLAIMER:
+   This module is intended to provide an additional 
+   level of control and security over your uploaded 
+   assets, HOWEVER there is no gaurantee that this 
+   module is 100% secure, that other code on your 
+   website or server allows alternative methods of 
+   accessing your files or that future changes to 
+   your webserver configuration or SilverStripe 
+   installation will allow this protection to be
+   bypassed.
