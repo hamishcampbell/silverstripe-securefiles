@@ -10,8 +10,7 @@
 class SecureFileController extends Controller implements PermissionProvider {
 
 	/**
-	 * There are no publicly allowed actions on this controller.
-	 * @var array
+	 * @var array Disallow all public actions on this controller
 	 */
 	public static $allowed_actions = array();
 	
@@ -21,21 +20,17 @@ class SecureFileController extends Controller implements PermissionProvider {
 	static $htaccess_file = ".htaccess";
 
 	/**
-	 * Size of output chunks in kb while in PHP fread mode.
-	 * @var integer
+	 * @var integer Size of output chunks in kb while in PHP fread mode.
 	 */
 	static $chuck_size_kb = 32;
 	
 	/**
-	 * Use X-Sendfile header mode instead of PHP fread mode.
-	 * @var boolean
+	 * @var boolean Flag use X-Sendfile header mode instead of PHP fread mode.
 	 */
 	protected static $use_x_sendfile = false;
 	
 	/**
-	 * Use SilverStripe send file method. This is inefficient
-	 * and is only provided for testing purposes.
-	 * @var boolean
+	 * @var boolean Flag use SilverStripe send file method.
 	 */
 	protected static $use_ss_sendfile = false;
 	
