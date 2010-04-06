@@ -48,7 +48,7 @@ class SecureFileMemberPermissionDecorator extends DataObjectDecorator {
 	}
 	
 	/**
-	 * Collage permissions for all parent folders
+	 * Collate permissions for all parent folders
 	 * 
 	 * @return DataObjectSet
 	 */
@@ -60,7 +60,7 @@ class SecureFileMemberPermissionDecorator extends DataObjectDecorator {
 	}
 	
 	/**
-	 * Adds group select fields to CMS
+	 * Adds member select fields to CMS
 	 * 
  	 * @param FieldSet $fields
  	 * @return void

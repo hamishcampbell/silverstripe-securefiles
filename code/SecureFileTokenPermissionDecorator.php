@@ -46,7 +46,7 @@ class SecureFileTokenPermissionDecorator extends DataObjectDecorator {
 	}
 	
 	/**
-	 * Adds group select fields to CMS
+	 * Adds token creation fields to CMS
 	 * 
  	 * @param FieldSet $fields
  	 * @return void

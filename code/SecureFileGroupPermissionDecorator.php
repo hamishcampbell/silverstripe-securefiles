@@ -44,7 +44,7 @@ class SecureFileGroupPermissionDecorator extends DataObjectDecorator {
 	}
 	
 	/**
-	 * Collage permissions for all parent folders
+	 * Collate permissions for all parent folders
 	 * 
 	 * @return DataObjectSet
 	 */
