@@ -8,7 +8,7 @@
  * @copyright copyright (c) 2010, Hamish Campbell 
  */
 class SecureFileController extends Controller implements PermissionProvider {
-
+	
 	/**
 	 * @var array Disallow all public actions on this controller
 	 */
@@ -18,7 +18,7 @@ class SecureFileController extends Controller implements PermissionProvider {
 	 * @var string htaccess file as set by apache config
 	 */
 	static $htaccess_file = ".htaccess";
-
+	
 	/**
 	 * @var integer Size of output chunks in kb while in PHP fread mode.
 	 */
@@ -52,7 +52,7 @@ class SecureFileController extends Controller implements PermissionProvider {
 			"RewriteRule (.*) " . SAPPHIRE_DIR . "/main.php?url=%1&%{QUERY_STRING} [L]\n";
 		return $rewrite;
 	}
-
+	
 	/**
 	 * Use X-Sendfile headers to send files to the browser.
 	 * This is quicker than pushing files through PHP but
@@ -63,7 +63,7 @@ class SecureFileController extends Controller implements PermissionProvider {
 		self::use_default_sendfile_method();
 		self::$use_x_sendfile = true;
 	}
-
+	
 	/**
 	 * Use internal SilverStripe to send files to the browser.
 	 * This is the least efficient method but is useful for 
@@ -113,7 +113,7 @@ class SecureFileController extends Controller implements PermissionProvider {
 		if(ClassInfo::exists('SS_HTTPResponse')) {
 			return new SS_HTTPResponse($body, 404);
 		} else {
-			return new HTTPResponse($body, 404);	
+			return new HTTPResponse($body, 404);
 		}
 	}
 	
@@ -135,7 +135,7 @@ class SecureFileController extends Controller implements PermissionProvider {
 	 * example, resampled images.
 	 */
 	function fileFound(File $file, $alternate_path = null) {
-
+		
 		// File properties
 		$file_name = $file->Filename;
 		$file_path = Director::getAbsFile($alternate_path ? $alternate_path : $file->FullPath);
@@ -149,7 +149,7 @@ class SecureFileController extends Controller implements PermissionProvider {
 				return HTTPRequest::send_file(file_get_contents($file_path), $file_name);
 			}
 		}
-
+		
 		// Normal operation:
 		$mimeType = HTTP::getMimeType($file_name);
 		header("Content-Type: {$mimeType}; name=\"" . addslashes($file_name) . "\"");
@@ -164,12 +164,12 @@ class SecureFileController extends Controller implements PermissionProvider {
 		} elseif($filePointer = fopen($file_path, 'rb')) {
 			session_write_close();
 			ob_flush();
-	   		flush();
-	   		// Push the file while not EOF and connection exists
+			flush();
+			// Push the file while not EOF and connection exists
 			while(!feof($filePointer) && !connection_aborted()) {
 				print(fread($filePointer, 1024 * self::$chuck_size_kb));
 				ob_flush();
-	        	flush();
+				flush();
 			}
 			fclose($filePointer);
 			exit();
@@ -177,7 +177,7 @@ class SecureFileController extends Controller implements PermissionProvider {
 			// Edge case - either not found anymore or can't read
 			return $this->fileNotFound();
 		}
-	}	
+	}
 	
 	/**
 	 * Permission provider for access to secure files

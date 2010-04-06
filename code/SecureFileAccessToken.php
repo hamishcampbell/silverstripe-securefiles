@@ -39,7 +39,7 @@ class SecureFileAccessToken extends DataObject {
 		'ExpiryNice' => 'Expiry', 
 		'TokenedAbsoluteURL' => 'URL'
 	);
-
+	
 	static $casting = array(
 		'ExpiryNice' => 'Varchar',
 		'MemberNice' => 'Varchar',
@@ -52,7 +52,7 @@ class SecureFileAccessToken extends DataObject {
 	public function getName() {
 		return $this->File()->Name;
 	}
-
+	
 	/**
 	 * Get the URL for this access token record
 	 * @return string

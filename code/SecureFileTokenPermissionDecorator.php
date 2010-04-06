@@ -64,7 +64,7 @@ class SecureFileTokenPermissionDecorator extends DataObjectDecorator {
 		// Update Security Tab
 		$secureFilesTab = $fields->findOrMakeTab('Root.'._t('SecureFiles.SECUREFILETABNAME', 'Security'));	
 		$secureFilesTab->push(new HeaderField(_t('SecureFiles.TOKENACCESSTITLE', 'Token Access')));
-
+		
 		if(!$this->owner->containsFiles()) { 
 			$secureFilesTab->push(new ReadonlyField('DummyTokenList', '', _t('SecureFiles.NOFILESINFOLDER', 'There are no files in this folder.')));
 			return;

@@ -16,7 +16,7 @@ class SecureFileGroupPermissionDecorator extends DataObjectDecorator {
 			),
 		);
 	}
-
+	
 	/**
 	 * View permission check
 	 * 

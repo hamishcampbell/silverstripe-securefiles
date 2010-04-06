@@ -8,7 +8,7 @@
  * @copyright copyright (c) 2010, Hamish Campbell 
  */
 class SecureFileDecorator extends DataObjectDecorator {
-
+	
 	function extraStatics() {
 		return array(
 			'db' => array(
@@ -44,7 +44,6 @@ class SecureFileDecorator extends DataObjectDecorator {
 		$values = $this->owner->extend('canViewSecured', $member);
 		return max($values);
 	}
-
 	
 	/**
 	 * Are any of this file's parent folders secured
@@ -85,7 +84,7 @@ class SecureFileDecorator extends DataObjectDecorator {
 		$secureFilesTab->push($EnableSecurityField);
 	
 	}
-
+	
 	/**
 	 * For folders, will need to add or remove the htaccess rules
 	 * Assumptions:
