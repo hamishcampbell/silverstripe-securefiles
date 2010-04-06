@@ -33,10 +33,10 @@ DataObject::add_extension('File', 'SecureFileDecorator');
  * file handling in PHP. Supported in lighttpd and in Apache with mod_xsendfile
  * available at http://tn123.ath.cx/mod_xsendfile/
  */
-// SecureFileController::UseXSendFile(true);
+// SecureFileController::use_x_sendfile_method();
 
 /**
  * For testing or debug purposes, you can force this module to use the internal
  * Sapphire send file method. Not recommended for production sites.
  */
-// SecureFileController::UseInternalSendFile(true);
+// SecureFileController::use_ss_sendfile_method();

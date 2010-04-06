@@ -58,7 +58,7 @@ Recommendations
   or lighttpd (uses xsendfile natively). Enable xsendfile
   headers with Secure Files by adding this to your
   _config.php:
-  SecureFileController::UseXSendFile(true);
+  SecureFileController::use_x_sendfile_method(true);
  
  Disclaimer
  -----------------------------------------------

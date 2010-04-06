@@ -53,25 +53,34 @@ class SecureFileController extends Controller implements PermissionProvider {
 	}
 
 	/**
-	 * Tell Secure Files to use X-Sendfile headers.
+	 * Use X-Sendfile headers to send files to the browser.
 	 * This is quicker than pushing files through PHP but
 	 * requires either Lighttpd or mod_xsendfile for Apache
 	 * @link http://tn123.ath.cx/mod_xsendfile/ 
-	 * @param boolean $value
 	 */
-	static function UseXSendFile($value = true) {
-		self::$use_x_sendfile = (bool)$value;
+	static function use_x_sendfile_method() {
+		self::use_default_sendfile_method();
+		self::$use_x_sendfile = true;
 	}
 
 	/**
-	 * Tell Secure Files to use internal SilverStripe
-	 * send file method. This is the least efficient method
-	 * but is useful for testing. Not recommend for production
+	 * Use internal SilverStripe to send files to the browser.
+	 * This is the least efficient method but is useful for 
+	 * testing. Not recommend for production
 	 * environments.
-	 * @param boolean $value
 	 */
-	static function UseInternalSendFile($value = true) {
-		self::$use_ss_sendfile = (bool)$value;
+	static function use_ss_sendfile_method() {
+		self::use_default_sendfile_method();
+		self::$use_ss_sendfile = true;
+	}
+	
+	/**
+	 * Use the default chucked file method to send files to the browser.
+	 * This is the default method.
+	 */
+	static function use_default_sendfile_method() {
+		self::$use_ss_sendfile = false;
+		self::$use_x_sendfile = false;
 	}
 	
 	/**
