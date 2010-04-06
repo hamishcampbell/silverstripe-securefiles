@@ -10,6 +10,12 @@
 class SecureFileController extends Controller implements PermissionProvider {
 
 	/**
+	 * There are no publicly allowed actions on this controller.
+	 * @var array
+	 */
+	public static $allowed_actions = array();
+	
+	/**
 	 * @var string htaccess file as set by apache config
 	 */
 	static $htaccess_file = ".htaccess";
