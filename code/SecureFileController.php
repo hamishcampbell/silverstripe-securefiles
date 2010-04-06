@@ -95,10 +95,10 @@ class SecureFileController extends Controller implements PermissionProvider {
 		
 		if($file instanceof File) {
 			return ($file->canView())
-				? $this->FileFound($file, $file_path)
-				: $this->FileNotAuthorized("Not Authorized");
+				? $this->fileFound($file, $file_path)
+				: $this->fileNotAuthorized("Not Authorized");
 		} else {
-			return $this->FileNotFound("Not Found");
+			return $this->fileNotFound("Not Found");
 		}
 	}
 	
@@ -108,7 +108,7 @@ class SecureFileController extends Controller implements PermissionProvider {
 	 * @param $body Optional message body
 	 * @return HTTPResponse
 	 */
-	function FileNotFound($body = "") {
+	function fileNotFound($body = "") {
 		if(ClassInfo::exists('SS_HTTPResponse')) {
 			return new SS_HTTPResponse($body, 404);
 		} else {
@@ -122,7 +122,7 @@ class SecureFileController extends Controller implements PermissionProvider {
 	 * @param $body Optional message body
 	 * @return HTTPResponse
 	 */
-	function FileNotAuthorized($body = "") {
+	function fileNotAuthorized($body = "") {
 		Security::permissionFailure($this, $body);
 	}
 	
@@ -133,7 +133,7 @@ class SecureFileController extends Controller implements PermissionProvider {
 	 * @param $alternate_path string If supplied, return the file from this path instead, for
 	 * example, resampled images.
 	 */
-	function FileFound(File $file, $alternate_path = null) {
+	function fileFound(File $file, $alternate_path = null) {
 
 		// File properties
 		$file_name = $file->Filename;
@@ -174,7 +174,7 @@ class SecureFileController extends Controller implements PermissionProvider {
 			exit();
 		} else {
 			// Edge case - either not found anymore or can't read
-			return $this->FileNotFound();
+			return $this->fileNotFound();
 		}
 	}	
 	
