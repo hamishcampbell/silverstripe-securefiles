@@ -91,7 +91,7 @@ class SecureFileControllerTest extends FunctionalTest {
 	
 	function testAccessToUnsecureFile() {
 		// Ensure the expected response object is returned:
-		SecureFileController::UseInternalSendFile();
+		SecureFileController::use_ss_sendfile_method();
 		
 		// Test access to unsecure file:
 		$secure_file = $this->objFromFixture('File', 'file2');
@@ -105,7 +105,7 @@ class SecureFileControllerTest extends FunctionalTest {
 	 */
 	function testAccessToSecuredFile() {
 		// Ensure the expected response object is returned:
-		SecureFileController::UseInternalSendFile();
+		SecureFileController::use_ss_sendfile_method();
 		
 		$secure_folder = $this->objFromFixture('Folder', '1');
 		$secure_folder->Secured = true;
