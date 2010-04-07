@@ -1,5 +1,6 @@
 CURRENT
 
+  - Added onAccessGranted and onAccessDenied hooks for File
   - DateField compatibility fixes
   - Member access token permission option
   - Support for x-sendfile module and fread send method
