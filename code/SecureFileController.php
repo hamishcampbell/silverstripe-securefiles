@@ -136,6 +136,9 @@ class SecureFileController extends Controller implements PermissionProvider {
 	 */
 	function fileFound(File $file, $alternate_path = null) {
 		
+		// Hook to allow processing before sending the file
+		$file->extend('onBeforeSend');
+		
 		// File properties
 		$file_name = $file->Filename;
 		$file_path = Director::getAbsFile($alternate_path ? $alternate_path : $file->FullPath);
