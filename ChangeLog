@@ -1,4 +1,4 @@
-CURRENT
+0.30
 
   - Added onAccessGranted and onAccessDenied hooks for File
   - DateField compatibility fixes
