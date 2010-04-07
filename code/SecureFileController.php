@@ -95,9 +95,13 @@ class SecureFileController extends Controller implements PermissionProvider {
 		$file = File::find($file_path);
 		
 		if($file instanceof File) {
-			return ($file->canView())
-				? $this->fileFound($file, $file_path)
-				: $this->fileNotAuthorized("Not Authorized");
+			if ($file->canView()) {
+				$file->extend('onAccessGranted');
+				return $this->fileFound($file, $file_path);
+			} else {
+				$file->extend('onAccessDenied');
+				return $this->fileNotAuthorized("Not Authorized");
+			}
 		} else {
 			return $this->fileNotFound("Not Found");
 		}
@@ -135,9 +139,6 @@ class SecureFileController extends Controller implements PermissionProvider {
 	 * example, resampled images.
 	 */
 	function fileFound(File $file, $alternate_path = null) {
-		
-		// Hook to allow processing before sending the file
-		$file->extend('onBeforeSend');
 		
 		// File properties
 		$file_name = $file->Filename;
