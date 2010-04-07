@@ -20,12 +20,12 @@ http://polemic.net.nz/secure-files-module/?refer=docs
 Installation Instructions
 -----------------------------------------------
 1. Extract the module to your website directory.
-
+   
 2. Run /dev/build?flush=1
-
+   
 3. Optionally apply the additional permission modes
    listed in _config.php
-
+   
 Usage Overview
 -----------------------------------------------
 Adds a "Security" tab to the Folder options in
@@ -44,7 +44,7 @@ Recommendations
   If you're using SilverStripe in rewriteless mode
   (using the base index.php) or via IIS, DO NOT
   USE THIS MODULE.
-
+  
 * Disable all Apache Option directives for your 
   asset folders from your Apache configuration
   (eg httpd.conf). Prevents directory indexing,
@@ -59,7 +59,19 @@ Recommendations
   headers with Secure Files by adding this to your
   _config.php:
   SecureFileController::use_x_sendfile_method();
+  
+ Developer Tips
+ -----------------------------------------------
  
+* Create new access methods by decorating File and
+  implementing the canViewSecured method. If it returns
+  true access to the file is granted.
+  
+* Hooks are provided for onAccessGranted and 
+  onAccessDenied. Implement these methods in your
+  decorators to trigger actions when the file is 
+  requested.
+  
  Disclaimer
  -----------------------------------------------
  ADDITIONAL COMMENTARY TO THE LICENSE DISCLAIMER:
