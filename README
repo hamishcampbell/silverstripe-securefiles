@@ -60,8 +60,8 @@ Recommendations
   _config.php:
   SecureFileController::use_x_sendfile_method();
   
- Developer Tips
- -----------------------------------------------
+Developer Tips
+-----------------------------------------------
  
 * Create new access methods by decorating File and
   implementing the canViewSecured method. If it returns
