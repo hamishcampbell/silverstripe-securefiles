@@ -109,4 +109,4 @@ Developer Tips
    accessing your files or that future changes to 
    your webserver configuration or SilverStripe 
    installation will now allow this protection to 
-   be bypassed.
+   be bypassed. Use at your own risk.
