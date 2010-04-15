@@ -37,6 +37,25 @@ webserver and your database, as sapphire will check
 the datatabase for access permissions, and pass the
 data through sapphire when it is output to the user.
 
+At the most basic level, ADMINISTRATOR users and users
+with the SECUREFILEACCESS permission will always be 
+granted access to files.  
+
+Any or all of the additional systems can be enabled:
+   Group Permission: assign groups that are premitted
+      to access the file by folder. Inherits 
+      permissions from parent folders.
+   Member Permission: assign permission to folders to
+      individual members. Inherits permissions from 
+      parent folders. 
+   Token Permissoin: generate a unique URL the grants 
+      access to the file. Optionally set an expiry 
+      date
+
+Only ADMINISTRATOR users or users with the the 
+SECUREFILESETTINGS permission are able to edit folder 
+security settings in the CMS.
+
 Recommendations
 -----------------------------------------------
 
@@ -70,7 +89,14 @@ Developer Tips
 * Hooks are provided for onAccessGranted and 
   onAccessDenied. Implement these methods in your
   decorators to trigger actions when the file is 
-  requested.
+  requested (eg, access logging).
+  
+* The token access permission provides the capability
+  to link tokens to specific users by supplying a valid
+  member ID. This is not used within the default
+  administration of Secure Files, but is provided as 
+  an option for developers to facilitate other content
+  delivery options (eg, paid for downloads).
   
  Disclaimer
  -----------------------------------------------
