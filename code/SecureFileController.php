@@ -165,7 +165,7 @@ class SecureFileController extends Controller implements PermissionProvider {
 			session_write_close();
 			header('X-Sendfile: '.$file_path);
 			exit();
-		} elseif($filePointer = fopen($file_path, 'rb')) {
+		} elseif($filePointer = @fopen($file_path, 'rb')) {
 			session_write_close();
 			$this->flush();
 			// Push the file while not EOF and connection exists
