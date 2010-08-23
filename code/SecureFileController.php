@@ -164,16 +164,14 @@ class SecureFileController extends Controller implements PermissionProvider {
 		if(self::$use_x_sendfile) {
 			session_write_close();
 			header('X-Sendfile: '.$file_path);
-			exit();			
+			exit();
 		} elseif($filePointer = fopen($file_path, 'rb')) {
 			session_write_close();
-			ob_flush();
-			flush();
+			$this->flush();
 			// Push the file while not EOF and connection exists
 			while(!feof($filePointer) && !connection_aborted()) {
 				print(fread($filePointer, 1024 * self::$chuck_size_kb));
-				ob_flush();
-				flush();
+				$this->flush();
 			}
 			fclose($filePointer);
 			exit();
@@ -181,6 +179,19 @@ class SecureFileController extends Controller implements PermissionProvider {
 			// Edge case - either not found anymore or can't read
 			return $this->fileNotFound();
 		}
+	}
+	
+	/**
+	 * Flush the output buffer to the server (if possible).
+	 * @see http://nz.php.net/manual/en/function.flush.php#93531
+	 */
+	function flush() {
+		if(ob_get_length()) {
+			@ob_flush();
+			@flush();
+			@ob_end_flush();
+		}
+		@ob_start();
 	}
 	
 	/**
