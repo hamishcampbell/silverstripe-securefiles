@@ -32,6 +32,7 @@ with the SECUREFILEACCESS permission will always be
 granted access to files.  
 
 Any or all of the additional systems can be enabled:
+
  *  Group Permission: assign groups that are premitted 
     to access the file by folder. Inherits 
     permissions from parent folders.
