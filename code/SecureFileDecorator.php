@@ -72,7 +72,9 @@ class SecureFileDecorator extends DataObjectDecorator {
 		if(!Permission::checkMember(Member::currentUser(), array('ADMIN', 'SECURE_FILE_SETTINGS')))
 			return; 
 			
-		$secureFilesTab = $fields->findOrMakeTab('Root.'._t('SecureFiles.SECUREFILETABNAME', 'Security'));		
+		$secureFilesTab = $fields->findOrMakeTab('Root.'._t('SecureFiles.SECUREFILETABNAME', 'Security'));
+		$EnableSecurityHolder = new FieldGroup();
+		$EnableSecurityHolder->addExtraClass('securityFieldHolder');
 		if($this->InheritSecured()) {
 			$EnableSecurityField = new ReadonlyField('InheritSecurity', '', _t('SecureFiles.INHERITED', 'This folder is inheriting security settings from a parent folder.'));
 			$EnableSecurityField->addExtraClass('prependLock');
@@ -81,7 +83,8 @@ class SecureFileDecorator extends DataObjectDecorator {
 		}			
 		
 		$secureFilesTab->push(new HeaderField(_t('SecureFiles.FOLDERSECURITY', 'Folder Security')));
-		$secureFilesTab->push($EnableSecurityField);
+		$EnableSecurityHolder->push($EnableSecurityField);
+		$secureFilesTab->push($EnableSecurityHolder);
 	
 	}
 	
@@ -96,13 +99,40 @@ class SecureFileDecorator extends DataObjectDecorator {
 	function onAfterWrite() {
 		parent::onAfterWrite();
 		if($this->owner instanceof Folder) {
-			$htaccess = $this->owner->getFullPath().SecureFileController::$htaccess_file;
+			$htaccess = $this->owner->getFullPath().SecureFileController::get_access_filename();
 			if($this->owner->Secured && !file_exists($htaccess)) {
-				file_put_contents($htaccess, SecureFileController::htaccess_content());				
+				file_put_contents($htaccess, $this->htaccessContent());				
 			} elseif(!$this->owner->Secured && file_exists($htaccess)) {
 				unlink($htaccess);
 			}
 		}
+	}
+	
+	/**
+	 * Secure files htaccess rules
+	 * Rules can be modified by decorators with the extension method
+	 * modifyAccessRules`. It is passed an array of named rules that
+	 * can be modified. The array is imploded with newlines to produce
+	 * the final Apache access ruleset.
+	 * 
+	 * @return string
+	 */	
+	function htaccessContent() {
+		$rewriteRules =  array(
+			'xsendfile' => "<IfModule xsendfile_module>\n" .
+				"	XSendFile on \n" . 
+				"</IfModule>",
+			'php_handler' => "AddHandler default-handler php phtml php3 php4 php5 inc",
+				"<IfModule mod_php5.c>\n" .
+				"	php_flag engine off\n" .
+				"</IfModule>",
+			'rewrite_engine' => "RewriteEngine On\n" .
+				"RewriteBase " . (BASE_URL ? BASE_URL : "/") . "\n" . 
+				"RewriteCond %{REQUEST_URI} ^(.*)$\n" .
+				"RewriteRule (.*) " . SAPPHIRE_DIR . "/main.php?url=%1&%{QUERY_STRING} [L]"
+		);
+		$this->owner->extend('modifyAccessRules', $rewriteRules);
+		return implode("\n", $rewriteRules);
 	}
 	
 }

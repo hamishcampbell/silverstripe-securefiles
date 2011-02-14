@@ -11,13 +11,13 @@ Folder:
 
 File:
    file1:
-      Name: secure_file.test
+      Name: secure_file.txt
       Parent: 1
    file2:
-      Name: unsecure_file.test
+      Name: unsecure_file.txt
       Parent: 2
    file3:
-      Name: secure_childfile.test
+      Name: secure_childfile.txt
       Parent: 3
 
  

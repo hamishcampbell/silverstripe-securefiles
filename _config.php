@@ -6,9 +6,10 @@
  * @author Hamish Campbell <hn.campbell@gmail.com>
  * @copyright copyright (c) 2010, Hamish Campbell
  */
+define('MODULE_SECUREFILES_PATH', basename(dirname(__FILE__)));
 
 Director::addRules(50, array(ASSETS_DIR . '/$Action' => 'SecureFileController'));
-AssetAdmin::require_css('securefiles/css/SecureFiles.css');
+AssetAdmin::require_css(MODULE_SECUREFILES_PATH . '/css/SecureFiles.css');
 // -------------------------------
 
 /**

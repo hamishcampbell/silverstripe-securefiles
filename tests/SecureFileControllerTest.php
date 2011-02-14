@@ -9,13 +9,14 @@
  */
 class SecureFileControllerTest extends FunctionalTest {
 	
-	static $fixture_file = 'securefiles/tests/SecureFileControllerTest.yml';
-	
 	protected $priorAuthenticators = array();
 	
 	protected $priorDefaultAuthenticator = null;	
 	
 	function setUp() {
+		
+		self::$fixture_file = MODULE_SECUREFILES_PATH . '/tests/SecureFileControllerTest.yml';
+		
 		parent::setUp();
 		
 		$this->priorAuthenticators = Authenticator::get_authenticators();
@@ -128,11 +129,11 @@ class SecureFileControllerTest extends FunctionalTest {
 	}
 	
 	function checkHasHtaccess($folder) {
-		$htaccess_path = BASE_PATH."/{$folder->Filename}".SecureFileController::$htaccess_file;
+		$htaccess_path = BASE_PATH."/{$folder->Filename}".SecureFileController::get_access_filename();
 		if(!file_exists($htaccess_path))
 			return false;
 		$content = file_get_contents($htaccess_path);
-		return ($content == SecureFileController::htaccess_content()); 
+		return ($content == singleton('File')->htaccessContent()); 
 	}
 	
 

@@ -17,12 +17,12 @@ class SecureFileController extends Controller implements PermissionProvider {
 	/**
 	 * @var string htaccess file as set by apache config
 	 */
-	static $htaccess_file = ".htaccess";
+	protected static $htaccess_file = ".htaccess";
 	
 	/**
 	 * @var integer Size of output chunks in kb while in PHP fread mode.
 	 */
-	static $chuck_size_kb = 32;
+	protected static $chunck_size_kb = 32;
 	
 	/**
 	 * @var boolean Flag use X-Sendfile header mode instead of PHP fread mode.
@@ -33,25 +33,6 @@ class SecureFileController extends Controller implements PermissionProvider {
 	 * @var boolean Flag use SilverStripe send file method.
 	 */
 	protected static $use_ss_sendfile = false;
-	
-	/**
-	 * Secure files htaccess rules
-	 * 
-	 * @return string
-	 */	
-	static function htaccess_content() {
-		$rewrite = 
-			"<IfModule xsendfile_module>\n" .
-			"XSendFile on \n" . 
-			"</IfModule>\n" .
-			"RemoveHandler .php .phtml .php3 .php4 .php5 .inc \n" . 
-			"RemoveType .php .phtml .php3 .php4 .php5 .inc \n" .
-			"RewriteEngine On\n" .
-			"RewriteBase " . (BASE_URL ? BASE_URL : "/") . "\n" . 
-			"RewriteCond %{REQUEST_URI} ^(.*)$\n" .
-			"RewriteRule (.*) " . SAPPHIRE_DIR . "/main.php?url=%1&%{QUERY_STRING} [L]\n";
-		return $rewrite;
-	}
 	
 	/**
 	 * Use X-Sendfile headers to send files to the browser.
@@ -76,12 +57,39 @@ class SecureFileController extends Controller implements PermissionProvider {
 	}
 	
 	/**
-	 * Use the default chucked file method to send files to the browser.
+	 * Use the default chuncked file method to send files to the browser.
 	 * This is the default method.
 	 */
 	static function use_default_sendfile_method() {
 		self::$use_ss_sendfile = false;
 		self::$use_x_sendfile = false;
+	}
+	
+	/**
+	 * Set the size of upload chunk in bytes.
+	 * @param int $kilobytes
+	 */
+	static function set_chunk_size($kilobytes) {
+		$kilobytes = max(0, (int)$kilobytes);
+		if(!$kilobytes) user_error("Invalid download chunk size", E_USER_ERROR);
+		self::$chunck_size_kb = $kilobytes;
+	}
+	
+	/**
+	 * Set the Apache access file name (.htaccess by default)
+	 * as determined by the AccessFileName Apache directive.
+	 * @param string $filename
+	 */
+	static function set_access_filename($filename) {
+		self::$htaccess_file = $filename;
+	}
+	
+	/**
+	 * Get the Apache access file name
+	 * @return string
+	 */
+	static function get_access_filename() {
+		return self::$htaccess_file;
 	}
 	
 	/**
@@ -170,7 +178,7 @@ class SecureFileController extends Controller implements PermissionProvider {
 			$this->flush();
 			// Push the file while not EOF and connection exists
 			while(!feof($filePointer) && !connection_aborted()) {
-				print(fread($filePointer, 1024 * self::$chuck_size_kb));
+				print(fread($filePointer, 1024 * self::$chunck_size_kb));
 				$this->flush();
 			}
 			fclose($filePointer);

@@ -4,11 +4,31 @@
 .secureAccessDenied {
 	color: #993333;
 }
-span.prependLock {
+span.prependLock, p.prependLock {
 	background: url('../images/lock.png') no-repeat 2px center;
 	padding-left: 22px !important;
 }
-span.prependUnlock {
+span.prependUnlock, p.prependLock {
 	background: url('../images/lock_unlock.png') no-repeat 2px center;
 	padding-left: 22px !important;
+}
+
+div.securityFieldHolder .middleColumn {
+	width: inherit !important;
+}
+
+div.securityFieldHolder .middleColumn .fieldgroup {
+	background: #F7F7F7;
+	border: 1px dotted #CCC;
+}
+
+div.securityFieldHolder .middleColumn label {
+	margin: 4px;
+	vertical-align: middle;
+	font-size: 12px;
+}
+
+div.securityFieldHolder .middleColumn input {
+	vertical-align: middle;
+	margin: 4px;
 }
