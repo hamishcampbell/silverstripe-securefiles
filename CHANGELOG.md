@@ -1,6 +1,6 @@
-## Changelog
+# Changelog
 
-# Development
+## Development
 
   - Added MODULE_SECUREFILES_PATH constant to _config.php
   - Updated htaccess ruleset to match SS default
@@ -12,7 +12,7 @@
   - Updated test cases (particularly to fix whitelisting issue)
   - CSS tweaks in CMS
 
-# 0.30
+## 0.30
 
   - Added onAccessGranted and onAccessDenied hooks for File
   - DateField compatibility fixes
@@ -22,11 +22,11 @@
   - Added buildtask to rebuild htaccess files
   - Translations: German, Spanish, Finnish, French and Swedish
   
-# 0.21
+## 0.21
 
   - Minor bugfix release
 
-# 0.20
+## 0.20
 
   - Improved 2.4 compatibility
   - Better i18n support
@@ -34,7 +34,7 @@
   - CMS administration improvements
   
 
-# 0.10
+## 0.10
 
   - Initial release
   - Abstracted security method
