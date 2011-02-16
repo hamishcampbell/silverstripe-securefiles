@@ -92,7 +92,7 @@ security settings in the CMS.
 ADDITIONAL COMMENTARY TO THE LICENSE DISCLAIMER:
 This module is intended to provide an additional 
 level of control and security over your uploaded 
-assets, HOWEVER there is no gaurantee that this 
+assets, HOWEVER there is no guarantee that this 
 module is 100% secure, that other code on your 
 website or server allows alternative methods of 
 accessing your files or that future changes to 
