@@ -14,7 +14,7 @@ $lang['de_DE']['SecureFiles']['INHERITED'] = 'Dieser Ordner übernimmt die Zugri
 $lang['de_DE']['SecureFiles']['SECUREFOLDER'] = 'Der Ordner ist gesichert.';
 $lang['de_DE']['SecureFiles']['FOLDERSECURITY'] = 'Ordner-Sicherheit';
 $lang['de_DE']['SecureFiles']['NONE'] = '(None)';
-$lang['de_DE']['SecureFiles']['NEVEREXPIRES'] =  'Niemals'';
+$lang['de_DE']['SecureFiles']['NEVEREXPIRES'] =  'Niemals';
 
 // GROUP PERMISSION
 $lang['de_DE']['SecureFiles']['GROUPACCESSTITLE'] = 'Gruppenberechtigungen';
