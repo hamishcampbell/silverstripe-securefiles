@@ -15,6 +15,7 @@ $lang['nl_NL']['SecureFiles']['SECUREFOLDER'] = 'Map is beveiligd.';
 $lang['nl_NL']['SecureFiles']['FOLDERSECURITY'] = 'Map beveiliging';
 $lang['nl_NL']['SecureFiles']['NONE'] = '(Geen)';
 $lang['nl_NL']['SecureFiles']['NEVEREXPIRES'] =  'Nooit';
+$lang['nl_NL']['SecureFiles']['NOTAUTHORIZED'] = 'Geen toestemming';
 
 // GROUP PERMISSION
 $lang['nl_NL']['SecureFiles']['GROUPACCESSTITLE'] = 'Groepstoegang';
