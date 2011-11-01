@@ -108,7 +108,7 @@ class SecureFileController extends Controller implements PermissionProvider {
 				return $this->fileFound($file, $file_path);
 			} else {
 				$file->extend('onAccessDenied');
-				return $this->fileNotAuthorized("Not Authorized");
+				return $this->fileNotAuthorized(_t('SecureFiles.NOTAUTHORIZED', 'Not Authorized'));
 			}
 		} else {
 			return $this->fileNotFound("Not Found");
