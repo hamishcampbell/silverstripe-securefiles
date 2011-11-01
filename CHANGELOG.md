@@ -11,6 +11,7 @@
   - Added modifyAccessRules hook to edit access ruleset
   - Updated test cases (particularly to fix whitelisting issue)
   - CSS tweaks in CMS
+  - Added option to set Not Found and Not Authorized message bodies.
 
 ## 0.30
 
