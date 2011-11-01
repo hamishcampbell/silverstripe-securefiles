@@ -15,6 +15,7 @@ $lang['en_GB']['SecureFiles']['FOLDERSECURITY'] = 'Folder Security';
 $lang['en_GB']['SecureFiles']['NONE'] = '(None)';
 $lang['en_GB']['SecureFiles']['NEVEREXPIRES'] =  'Never';
 $lang['en_GB']['SecureFiles']['NOTAUTHORIZED'] = 'Not Authorised';
+$lang['en_GB']['SecureFiles']['NOTFOUND'] = 'Not Found';
 
 // GROUP PERMISSION
 $lang['en_GB']['SecureFiles']['GROUPACCESSTITLE'] = 'Group Access';

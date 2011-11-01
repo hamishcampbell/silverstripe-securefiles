@@ -40,6 +40,11 @@ class SecureFileController extends Controller implements PermissionProvider {
 	protected static $i18n_not_authorized = array('SecureFiles.NOTAUTHORIZED', 'Not Authorized');
 	
 	/**
+	 * @var array i18n data for not found message as passed to _t
+	 */
+	protected static $i18n_not_found = array('SecureFiles.NOTFOUND', 'Not Found');
+	
+	/**
 	 * Use X-Sendfile headers to send files to the browser.
 	 * This is quicker than pushing files through PHP but
 	 * requires either Lighttpd or mod_xsendfile for Apache
@@ -107,6 +112,15 @@ class SecureFileController extends Controller implements PermissionProvider {
 	}
 	
 	/**
+	 * Set a 'not found' message to replace the standard string
+	 * @param $message Message to return to user, default "Not Found"
+	 * @param $i18n Reference to i18n path, default "SecureFiles.NOTFOUND"
+	 */
+	static function set_not_authorized_text($message = "Not Found", $i18n = "SecureFiles.NOTFOUND") {
+		self::$i18n_not_found = array($i18n, $message);
+	}
+	
+	/**
 	 * Process incoming requests passed to this controller
 	 * 
 	 * @return HTTPResponse
@@ -125,7 +139,7 @@ class SecureFileController extends Controller implements PermissionProvider {
 				return $this->fileNotAuthorized(call_user_func_array(_t, self::$i18n_not_authorized));
 			}
 		} else {
-			return $this->fileNotFound("Not Found");
+			return $this->fileNotFound(call_user_func_array(_t, self::$i18n_not_found));
 		}
 	}
 	
