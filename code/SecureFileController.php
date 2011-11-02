@@ -104,8 +104,8 @@ class SecureFileController extends Controller implements PermissionProvider {
 	
 	/**
 	 * Set a 'not authorized' message to replace the standard string
-	 * @param $message Message to return to user, default "Not Authorized"
-	 * @param $i18n Reference to i18n path, default "SecureFiles.NOTAUTHORIZED"
+	 * @param $message HTML body of 401 Not Authorized response
+	 * @param $i18n Reference to i18n path
 	 */
 	static function set_not_authorized_text($message = "Not Authorized", $i18n = "SecureFiles.NOTAUTHORIZED") {
 		self::$i18n_not_authorized = array($i18n, $message);
@@ -113,10 +113,10 @@ class SecureFileController extends Controller implements PermissionProvider {
 	
 	/**
 	 * Set a 'not found' message to replace the standard string
-	 * @param $message Message to return to user, default "Not Found"
-	 * @param $i18n Reference to i18n path, default "SecureFiles.NOTFOUND"
+	 * @param $message HTML body of 404 Not Found response
+	 * @param $i18n Reference to i18n path
 	 */
-	static function set_not_authorized_text($message = "Not Found", $i18n = "SecureFiles.NOTFOUND") {
+	static function set_not_found_text($message = "Not Found", $i18n = "SecureFiles.NOTFOUND") {
 		self::$i18n_not_found = array($i18n, $message);
 	}
 	
@@ -136,10 +136,10 @@ class SecureFileController extends Controller implements PermissionProvider {
 				return $this->fileFound($file, $file_path);
 			} else {
 				$file->extend('onAccessDenied');
-				return $this->fileNotAuthorized(call_user_func_array(_t, self::$i18n_not_authorized));
+				return $this->fileNotAuthorized(call_user_func_array('_t', self::$i18n_not_authorized));
 			}
 		} else {
-			return $this->fileNotFound(call_user_func_array(_t, self::$i18n_not_found));
+			return $this->fileNotFound(call_user_func_array('_t', self::$i18n_not_found));
 		}
 	}
 	
