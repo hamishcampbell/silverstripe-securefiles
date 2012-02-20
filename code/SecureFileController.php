@@ -177,7 +177,7 @@ class SecureFileController extends Controller implements PermissionProvider {
 	function fileFound(File $file, $alternate_path = null) {
 		
 		// File properties
-		$file_name = $file->Filename;
+		$file_name = $file->Name;
 		$file_path = Director::getAbsFile($alternate_path ? $alternate_path : $file->FullPath);
 		$file_size = filesize($file_path);
 		
