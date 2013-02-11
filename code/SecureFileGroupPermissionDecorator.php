@@ -29,7 +29,7 @@ class SecureFileGroupPermissionDecorator extends DataExtension {
 	/**
 	 * Collate permissions for this and all parent folders.
 	 * 
-	 * @return DataObjectSet
+	 * @return ArrayList
 	 */
 	function AllGroupPermissions() {
 		$groupSet = new ArrayList();
@@ -61,7 +61,6 @@ class SecureFileGroupPermissionDecorator extends DataExtension {
  	 * @return void
  	 */
 	public function updateCMSFields(FieldList $fields) {
-		
 		// Only modify folder objects with parent nodes
 		if(!($this->owner instanceof Folder) || !$this->owner->ID)
 			return;
@@ -74,6 +73,7 @@ class SecureFileGroupPermissionDecorator extends DataExtension {
 		$security = $fields->fieldByName('Security');
 		if (!$security) {
 			$security = ToggleCompositeField::create('Security', _t('SecureFiles.SECUREFILETABNAME', 'Security'), array())->setHeadingLevel(4);
+			$fields->push($security);
 		}
 		
 		$security->push(new HeaderField(_t('SecureFiles.GROUPACCESSTITLE', 'Group Access')));
