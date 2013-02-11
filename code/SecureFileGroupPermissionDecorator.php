@@ -76,7 +76,6 @@ class SecureFileGroupPermissionDecorator extends DataExtension {
 			$fields->push($security);
 		}
 		
-		$security->push(new HeaderField(_t('SecureFiles.GROUPACCESSTITLE', 'Group Access')));
 		$security->push(new TreeMultiselectField('GroupPermissions', _t('SecureFiles.GROUPACCESSFIELD', 'Group Access Permissions')));	
 			
 		if($this->owner->InheritSecured()) {

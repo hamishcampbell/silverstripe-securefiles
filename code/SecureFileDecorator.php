@@ -74,6 +74,7 @@ class SecureFileDecorator extends DataExtension {
 		$security = $fields->fieldByName('Security');
 		if (!$security) {
 			$security = ToggleCompositeField::create('Security', _t('SecureFiles.SECUREFILETABNAME', 'Security'), array())->setHeadingLevel(4);
+			$fields->push($security);
 		}
 		
 		if($this->InheritSecured()) {
@@ -83,7 +84,6 @@ class SecureFileDecorator extends DataExtension {
 			$EnableSecurityField = new CheckboxField('Secured', _t('SecureFiles.SECUREFOLDER', 'Folder is secure.'));
 		}
 		$security->push($EnableSecurityField);
-		$fields->push($security);
 	}
 	
 	/**

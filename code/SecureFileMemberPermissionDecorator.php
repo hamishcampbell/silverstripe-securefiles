@@ -77,7 +77,8 @@ class SecureFileMemberPermissionDecorator extends DataExtension {
 		
 		// Update Security Tab
 		
-		$members = GridField::create('MemberPermissions', _t('SecureFiles.MEMBERACCESSTITLE', 'Member Access'), $this->owner->MemberPermissions(), GridFieldConfig_RelationEditor::create());
+		//$members = GridField::create('MemberPermissions', _t('SecureFiles.MEMBERACCESSTITLE', 'Member Access'), $this->owner->MemberPermissions(), GridFieldConfig_RelationEditor::create());
+		$members = ListboxField::create('MemberPermissions', _t('SecureFiles.MEMBERACCESSTITLE', 'Member Access'), Member::get()->map()->toArray(), null, null, true);
 		$security->push($members);
 			
 		if($this->owner->InheritSecured()) {
