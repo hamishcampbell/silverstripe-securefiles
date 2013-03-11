@@ -7,9 +7,8 @@
  * @author Hamish Campbell <hn.campbell@gmail.com>
  * @copyright copyright (c) 2010, Hamish Campbell 
  */
-class SecureFileMemberPermissionDecorator extends DataObjectDecorator {
-	
-	function extraStatics() {
+class SecureFileMemberPermissionDecorator extends DataExtension {
+	function extraStatics($class = null, $extension = null) {
 		return array(
 			'many_many' => array(
 				'MemberPermissions' => 'Member',
@@ -25,7 +24,7 @@ class SecureFileMemberPermissionDecorator extends DataObjectDecorator {
 	 */
 	function canViewSecured(Member $member = null) {
 		if($member) {
-			return $this->owner->AllMemberPermissions()->containsIDs(array($member->ID));
+			return $this->owner->AllMemberPermissions()->byID($member->ID);
 		} else {
 			return false;
 		}
@@ -37,7 +36,7 @@ class SecureFileMemberPermissionDecorator extends DataObjectDecorator {
 	 * @return DataObjectSet
 	 */
 	function AllMemberPermissions() {
-		$memberSet = new DataObjectSet();
+		$memberSet = new ArrayList();
 		$members = $this->owner->MemberPermissions();
 		foreach($members as $member)
 			$memberSet->push($member);
@@ -47,16 +46,11 @@ class SecureFileMemberPermissionDecorator extends DataObjectDecorator {
 		return $memberSet;
 	}
 	
-	/**
-	 * Collate permissions for all parent folders
-	 * 
-	 * @return DataObjectSet
-	 */
 	function InheritedMemberPermissions() {
 		if($this->owner->ParentID)
 			return $this->owner->Parent()->AllMemberPermissions();
 		else
-			return new DataObjectSet();
+			return new ArrayList();
 	}
 	
 	/**
@@ -65,7 +59,7 @@ class SecureFileMemberPermissionDecorator extends DataObjectDecorator {
  	 * @param FieldSet $fields
  	 * @return void
  	 */
-	public function updateCMSFields(FieldSet &$fields) {
+	public function updateCMSFields(FieldList $fields) {
 		
 		// Only modify folder objects with parent nodes
 		if(!($this->owner instanceof Folder) || !$this->owner->ID)
@@ -76,18 +70,16 @@ class SecureFileMemberPermissionDecorator extends DataObjectDecorator {
 			return;
 		
 		// Update Security Tab
-		$secureFilesTab = $fields->findOrMakeTab('Root.'._t('SecureFiles.SECUREFILETABNAME', 'Security'));
-		$secureFilesTab->push(new HeaderField(_t('SecureFiles.MEMBERACCESSTITLE', 'Member Access')));
-		//_t('SecureFiles.MEMBERACCESSFIELD', 'Member Access Permissions')
+		$security = $fields->fieldByName('Security');
+		if (!$security) {
+			$security = ToggleCompositeField::create('Security', _t('SecureFiles.SECUREFILETABNAME', 'Security'), array())->setHeadingLevel(4);
+		}
 		
-		$secureFilesTab->push($memberTableField = new ManyManyComplexTableField(
-				$this->owner,
-				'MemberPermissions',
-				'Member',
-				null
-			)
-		);
-		$memberTableField->setPermissions(array());
+		// Update Security Tab
+		
+		//$members = GridField::create('MemberPermissions', _t('SecureFiles.MEMBERACCESSTITLE', 'Member Access'), $this->owner->MemberPermissions(), GridFieldConfig_RelationEditor::create());
+		$members = ListboxField::create('MemberPermissions', _t('SecureFiles.MEMBERACCESSTITLE', 'Member Access'), Member::get()->map()->toArray(), null, null, true);
+		$security->push($members);
 			
 		if($this->owner->InheritSecured()) {
 			$permissionMembers = $this->owner->InheritedMemberPermissions();
@@ -98,7 +90,7 @@ class SecureFileMemberPermissionDecorator extends DataObjectDecorator {
 			}
 			$InheritedMembersField = new ReadonlyField("InheritedMemberPermissionsText", _t('SecureFiles.MEMBERINHERITEDPERMS', 'Inherited Member Permissions'), $fieldText);
 			$InheritedMembersField->addExtraClass('prependUnlock');
-			$secureFilesTab->push($InheritedMembersField);
+			$security->push($InheritedMembersField);
 		}
 	}
 }

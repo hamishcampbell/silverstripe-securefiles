@@ -101,41 +101,32 @@ class SecureFileAccessToken extends DataObject {
 			return _t('SecureFiles.EVERYONE', 'Everyone');
 	}
 	
-	function getCMSFields() {
+	/**
+	 * @return GridFieldConfig A config suitable for displaying a list of SecureFileAccessTokens.
+	 */
+	public static function getGridFieldConfig() {
+		$config = GridFieldConfig::create();
+		$config->addComponent(new GridFieldButtonRow('before'));
+		$config->addComponent(new GridFieldAddNewButton('buttons-before-left'));
+		$config->addComponent(new GridFieldToolbarHeader());
+		$config->addComponent(new GridFieldDataColumns());
+		$config->addComponent(new GridFieldEditButton());
+		$config->addComponent(new GridFieldDeleteAction());
+		$config->addComponent(new GridFieldPaginator(30));
+		$config->addComponent(new GridFieldDetailForm());
 		
-		if($this->FolderID) {
-			// New token - select file:
-			$folder = DataObject::get_by_id('Folder', $this->FolderID);
-			$files = new DataObjectSet();
-			if($folder->myChildren()) {
-				foreach($folder->myChildren() as $file) {
-					if(!($file instanceof Folder))
-						$files->push($file);
-				}
-				$files->sort('Name');
-			}
-			$fileField = new DropdownField('FileID', 'File', $files->map('ID', 'Name'));
-		} else {
-			// Existing token:
-			$fileField = new ReadonlyField('FileDummy', 'File', $this->File()->Name);
-		}
-						
-		$fields = new FieldSet();
-		$fields->push($root = new TabSet('Root'));
-		$root->push($main = new Tab('Main'));
-		$main->push($fileField);
-		if(ClassInfo::exists('DatetimeField')) {
-			// 2.4.x
-			$main->push($expiry_field = new DatetimeField('Expiry', 'Expiry'));
-			$expiry_field->getDateField()->setConfig('showcalendar', true);
-			$expiry_field->getTimeField()->setConfig('showdropdown', true);
-		} else {
-			// 2.3.x
-			$main->push($expiry_field = new PopupDateTimeField('Expiry', 'Expiry'));
-		}
-		$main->push(new ReadonlyField('MemberDummyField', 'Member', $this->MemberNice()));
+		return $config;
+	}
+	
+	function getCMSFields() {
+		$fields = new FieldList();
+		$fields->push($expiry_field = new DatetimeField('Expiry', 'Expiry'));
+		$expiry_field->getDateField()->setConfig('showcalendar', true);
+		$expiry_field->getTimeField()->setConfig('showdropdown', true);
+		
+		$fields->push(new ReadonlyField('MemberDummyField', 'Member', $this->MemberNice()));
 		if($this->ID)
-			$main->push(new ReadonlyField('Token', 'Token'));
+			$fields->push(new ReadonlyField('Token', 'Token'));
 		$this->extend('updateCMSFields', $fields);
 		return $fields;
 	}

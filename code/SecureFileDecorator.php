@@ -7,9 +7,8 @@
  * @author Hamish Campbell <hn.campbell@gmail.com>
  * @copyright copyright (c) 2010, Hamish Campbell 
  */
-class SecureFileDecorator extends DataObjectDecorator {
-	
-	function extraStatics() {
+class SecureFileDecorator extends DataExtension {
+	function extraStatics($class = null, $extension = null) {
 		return array(
 			'db' => array(
 				'Secured' => 'Boolean',
@@ -62,7 +61,7 @@ class SecureFileDecorator extends DataObjectDecorator {
 	/**
 	 * Security tab for folders
 	 */
-	public function updateCMSFields(FieldSet &$fields) {
+	public function updateCMSFields(FieldList $fields) {
 		
 		// Only modify folder objects with parent nodes
 		if(!($this->owner instanceof Folder) || !$this->owner->ID)
@@ -71,21 +70,20 @@ class SecureFileDecorator extends DataObjectDecorator {
 		// Only allow ADMIN and SECURE_FILE_SETTINGS members to edit these options
 		if(!Permission::checkMember(Member::currentUser(), array('ADMIN', 'SECURE_FILE_SETTINGS')))
 			return; 
-			
-		$secureFilesTab = $fields->findOrMakeTab('Root.'._t('SecureFiles.SECUREFILETABNAME', 'Security'));
-		$EnableSecurityHolder = new FieldGroup();
-		$EnableSecurityHolder->addExtraClass('securityFieldHolder');
+		
+		$security = $fields->fieldByName('Security');
+		if (!$security) {
+			$security = ToggleCompositeField::create('Security', _t('SecureFiles.SECUREFILETABNAME', 'Security'), array())->setHeadingLevel(4);
+			$fields->push($security);
+		}
+		
 		if($this->InheritSecured()) {
 			$EnableSecurityField = new ReadonlyField('InheritSecurity', '', _t('SecureFiles.INHERITED', 'This folder is inheriting security settings from a parent folder.'));
 			$EnableSecurityField->addExtraClass('prependLock');
 		} else {
 			$EnableSecurityField = new CheckboxField('Secured', _t('SecureFiles.SECUREFOLDER', 'Folder is secure.'));
-		}			
-		
-		$secureFilesTab->push(new HeaderField(_t('SecureFiles.FOLDERSECURITY', 'Folder Security')));
-		$EnableSecurityHolder->push($EnableSecurityField);
-		$secureFilesTab->push($EnableSecurityHolder);
-	
+		}
+		$security->push($EnableSecurityField);
 	}
 	
 	/**
@@ -129,7 +127,7 @@ class SecureFileDecorator extends DataObjectDecorator {
 			'rewrite_engine' => "RewriteEngine On\n" .
 				"RewriteBase " . (BASE_URL ? BASE_URL : "/") . "\n" . 
 				"RewriteCond %{REQUEST_URI} ^(.*)$\n" .
-				"RewriteRule (.*) " . SAPPHIRE_DIR . "/main.php?url=%1&%{QUERY_STRING} [L]"
+				"RewriteRule (.*) " . FRAMEWORK_DIR . "/main.php?url=%1&%{QUERY_STRING} [L]"
 		);
 		$this->owner->extend('modifyAccessRules', $rewriteRules);
 		return implode("\n", $rewriteRules);

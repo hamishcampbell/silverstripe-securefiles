@@ -8,26 +8,7 @@
  */
 define('MODULE_SECUREFILES_PATH', basename(dirname(__FILE__)));
 
-Director::addRules(50, array(ASSETS_DIR . '/$Action' => 'SecureFileController'));
 AssetAdmin::require_css(MODULE_SECUREFILES_PATH . '/css/SecureFiles.css');
-// -------------------------------
-
-/**
- *  Apply optional permission methods here. Include them in the reverse
- *  order that you would like them to appear in the CMS.
- */
-
-// Assign file security by individual member:
-// DataObject::add_extension('File', 'SecureFileMemberPermissionDecorator');
-
-// Assign file security by member group:
-// DataObject::add_extension('File', 'SecureFileGroupPermissionDecorator');
-
-// Create time-limited access tokens:
-// DataObject::add_extension('File', 'SecureFileTokenPermissionDecorator');
-
-// -------------------------------
-DataObject::add_extension('File', 'SecureFileDecorator');
 
 /**
  * For large files or heavily trafficed sites use x-sendfile headers to by-pass
@@ -38,6 +19,6 @@ DataObject::add_extension('File', 'SecureFileDecorator');
 
 /**
  * For testing or debug purposes, you can force this module to use the internal
- * Sapphire send file method. Not recommended for production sites.
+ * frmaework send file method. Not recommended for production sites.
  */
 // SecureFileController::use_ss_sendfile_method();

@@ -7,9 +7,9 @@
  * @author Hamish Campbell <hn.campbell@gmail.com>
  * @copyright copyright (c) 2010, Hamish Campbell 
  */
-class SecureFileTokenPermissionDecorator extends DataObjectDecorator {
+class SecureFileTokenPermissionDecorator extends DataExtension {
 	
-	function extraStatics() {
+	function extraStatics($class = null, $extension = null) {
 		return array(
 			'has_many' => array(
 				'AccessTokens' => 'SecureFileAccessToken',
@@ -51,42 +51,29 @@ class SecureFileTokenPermissionDecorator extends DataObjectDecorator {
  	 * @param FieldSet $fields
  	 * @return void
  	 */
-	public function updateCMSFields(FieldSet &$fields) {
+	public function updateCMSFields(FieldList $fields) {
 		
 		// Only modify file objects with parent nodes
-		if(!($this->owner instanceof Folder) || !$this->owner->ID)
+		if( $this->owner instanceof Folder || !$this->owner->ID || !($this->owner instanceof File))
 			return;
-			
+		
+		// Only if parent folder is secure
+		if ( !$this->owner->Parent()->Secured ) return;
+		
 		// Only allow ADMIN and SECURE_FILE_SETTINGS members to edit these options
 		if(!Permission::checkMember(Member::currentUser(), array('ADMIN', 'SECURE_FILE_SETTINGS')))
 			return;
 		
 		// Update Security Tab
-		$secureFilesTab = $fields->findOrMakeTab('Root.'._t('SecureFiles.SECUREFILETABNAME', 'Security'));	
-		$secureFilesTab->push(new HeaderField(_t('SecureFiles.TOKENACCESSTITLE', 'Token Access')));
-		
-		if(!$this->owner->containsFiles()) { 
-			$secureFilesTab->push(new ReadonlyField('DummyTokenList', '', _t('SecureFiles.NOFILESINFOLDER', 'There are no files in this folder.')));
-			return;
+		$security = $fields->fieldByName('Security');
+		if (!$security) {
+			$security = ToggleCompositeField::create('Security', _t('SecureFiles.SECUREFILETABNAME', 'Security'), array())->setHeadingLevel(4);
 		}
 		
-		$secureFilesTab->push($tokenList = new ComplexTableField(
-			$this->owner,
-			'ContainedFileTokens',
-			'SecureFileAccessToken',
-			null,
-			null,
-			"File.ParentID = '{$this->owner->ID}'",
-			$sourceSort = null,
-			"JOIN File ON FileID = File.ID"
-		));
-		$tokenList->setParentIdName('FolderID');
-		$tokenList->setRelationAutoSetting(false);
+		$tokenList = GridField::create('AccessTokens', _t('SecureFiles.TOKENACCESSTITLE', 'Token Access'), $this->owner->AccessTokens(), SecureFileAccessToken::getGridFieldConfig());
+		$security->push($tokenList);
 		
-		// Remove add link if there are no files in this folder
-		if(!$this->owner->containsFiles()) 
-			$tokenList->setPermissions(array('edit', 'delete'));
-				
+		$fields->push($security);		
 	}
 	
 	/**
@@ -106,13 +93,13 @@ class SecureFileTokenPermissionDecorator extends DataObjectDecorator {
 		if($member)
 			$token->MemberID = is_object($member) ? $member->ID : (int)$member;
 		$token->write();
-		$this->extend('onAfterGenerateToken', $token);
+		$this->owner->extend('onAfterGenerateToken', $token);
 		return $token;
 	}
 	
 	/**
 	 * When the object is deleted, remove file access tokens that might be hanging around.
-	 * @see sapphire/core/model/DataObjectDecorator#onAfterDelete()
+	 * @see framework/core/model/DataObjectDecorator#onAfterDelete()
 	 */
 	function onAfterDelete() {
 		$tokens = DataObject::get('SecureFileAccessToken', "FileID = '".Convert::raw2sql($this->owner->ID)."'");
