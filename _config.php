@@ -10,9 +10,6 @@ define('MODULE_SECUREFILES_PATH', basename(dirname(__FILE__)));
 
 AssetAdmin::require_css(MODULE_SECUREFILES_PATH . '/css/SecureFiles.css');
 
-// -------------------------------
-DataObject::add_extension('File', 'SecureFileDecorator');
-
 /**
  * For large files or heavily trafficed sites use x-sendfile headers to by-pass
  * file handling in PHP. Supported in lighttpd and in Apache with mod_xsendfile

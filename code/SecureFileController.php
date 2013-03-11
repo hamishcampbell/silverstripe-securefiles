@@ -191,7 +191,7 @@ class SecureFileController extends Controller implements PermissionProvider {
 		}
 		
 		// Normal operation:
-		$mimeType = HTTP::getMimeType($file_name);
+		$mimeType = HTTP::get_mime_type($file_name);
 		header("Content-Type: {$mimeType}; name=\"" . addslashes($file_name) . "\"");
 		header("Content-Disposition: attachment; filename=" . addslashes($file_name));
 		header("Cache-Control: max-age=1, private");
