@@ -7,9 +7,9 @@
  * @author Hamish Campbell <hn.campbell@gmail.com>
  * @copyright copyright (c) 2010, Hamish Campbell 
  */
-class SecureFileDecorator extends DataObjectDecorator {
+class SecureFileDecorator extends DataExtension {
 	
-	function extraStatics() {
+	function extraStatics($class = null, $extension = null) {
 		return array(
 			'db' => array(
 				'Secured' => 'Boolean',
@@ -62,7 +62,7 @@ class SecureFileDecorator extends DataObjectDecorator {
 	/**
 	 * Security tab for folders
 	 */
-	public function updateCMSFields(FieldSet &$fields) {
+	public function updateCMSFields(FieldList $fields) {
 		
 		// Only modify folder objects with parent nodes
 		if(!($this->owner instanceof Folder) || !$this->owner->ID)
@@ -129,7 +129,7 @@ class SecureFileDecorator extends DataObjectDecorator {
 			'rewrite_engine' => "RewriteEngine On\n" .
 				"RewriteBase " . (BASE_URL ? BASE_URL : "/") . "\n" . 
 				"RewriteCond %{REQUEST_URI} ^(.*)$\n" .
-				"RewriteRule (.*) " . SAPPHIRE_DIR . "/main.php?url=%1&%{QUERY_STRING} [L]"
+				"RewriteRule (.*) " . FRAMEWORK_DIR . "/main.php?url=%1&%{QUERY_STRING} [L]"
 		);
 		$this->owner->extend('modifyAccessRules', $rewriteRules);
 		return implode("\n", $rewriteRules);

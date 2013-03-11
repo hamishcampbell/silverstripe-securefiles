@@ -8,7 +8,7 @@ Adds a variety of security controls to your SilverStripe file assets.
 
 ## Requirements
 
- *  SilverStripe 2.3,x, 2.4
+ *  SilverStripe 3,0.x
 
 ## Installation Instructions
 
@@ -23,9 +23,9 @@ Asset Administration. From here you can turn
 security on/off and set who can view the asset.
 
 Securing files will cause extra load on your
-webserver and your database, as sapphire will check
+webserver and your database, as framework will check
 the datatabase for access permissions, and pass the
-data through sapphire when it is output to the user.
+data through framework when it is output to the user.
 
 At the most basic level, ADMINISTRATOR users and users
 with the SECUREFILEACCESS permission will always be 

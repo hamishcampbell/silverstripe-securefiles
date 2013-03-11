@@ -106,7 +106,7 @@ class SecureFileAccessToken extends DataObject {
 		if($this->FolderID) {
 			// New token - select file:
 			$folder = DataObject::get_by_id('Folder', $this->FolderID);
-			$files = new DataObjectSet();
+			$files = new ArrayList();
 			if($folder->myChildren()) {
 				foreach($folder->myChildren() as $file) {
 					if(!($file instanceof Folder))
@@ -120,7 +120,7 @@ class SecureFileAccessToken extends DataObject {
 			$fileField = new ReadonlyField('FileDummy', 'File', $this->File()->Name);
 		}
 						
-		$fields = new FieldSet();
+		$fields = new FieldList();
 		$fields->push($root = new TabSet('Root'));
 		$root->push($main = new Tab('Main'));
 		$main->push($fileField);

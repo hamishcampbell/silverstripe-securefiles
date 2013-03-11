@@ -7,9 +7,9 @@
  * @author Hamish Campbell <hn.campbell@gmail.com>
  * @copyright copyright (c) 2010, Hamish Campbell 
  */
-class SecureFileMemberPermissionDecorator extends DataObjectDecorator {
+class SecureFileMemberPermissionDecorator extends DataExtension {
 	
-	function extraStatics() {
+	function extraStatics($class = null, $extension = null) {
 		return array(
 			'many_many' => array(
 				'MemberPermissions' => 'Member',
@@ -37,7 +37,7 @@ class SecureFileMemberPermissionDecorator extends DataObjectDecorator {
 	 * @return DataObjectSet
 	 */
 	function AllMemberPermissions() {
-		$memberSet = new DataObjectSet();
+		$memberSet = new ArrayList();
 		$members = $this->owner->MemberPermissions();
 		foreach($members as $member)
 			$memberSet->push($member);
@@ -56,7 +56,7 @@ class SecureFileMemberPermissionDecorator extends DataObjectDecorator {
 		if($this->owner->ParentID)
 			return $this->owner->Parent()->AllMemberPermissions();
 		else
-			return new DataObjectSet();
+			return new ArrayList();
 	}
 	
 	/**
@@ -65,7 +65,7 @@ class SecureFileMemberPermissionDecorator extends DataObjectDecorator {
  	 * @param FieldSet $fields
  	 * @return void
  	 */
-	public function updateCMSFields(FieldSet &$fields) {
+	public function updateCMSFields(FieldList $fields) {
 		
 		// Only modify folder objects with parent nodes
 		if(!($this->owner instanceof Folder) || !$this->owner->ID)

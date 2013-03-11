@@ -7,9 +7,9 @@
  * @author Hamish Campbell <hn.campbell@gmail.com>
  * @copyright copyright (c) 2010, Hamish Campbell 
  */
-class SecureFileTokenPermissionDecorator extends DataObjectDecorator {
+class SecureFileTokenPermissionDecorator extends DataExtension {
 	
-	function extraStatics() {
+	function extraStatics($class = null, $extension = null) {
 		return array(
 			'has_many' => array(
 				'AccessTokens' => 'SecureFileAccessToken',
@@ -51,7 +51,7 @@ class SecureFileTokenPermissionDecorator extends DataObjectDecorator {
  	 * @param FieldSet $fields
  	 * @return void
  	 */
-	public function updateCMSFields(FieldSet &$fields) {
+	public function updateCMSFields(FieldList $fields) {
 		
 		// Only modify file objects with parent nodes
 		if(!($this->owner instanceof Folder) || !$this->owner->ID)
@@ -112,7 +112,7 @@ class SecureFileTokenPermissionDecorator extends DataObjectDecorator {
 	
 	/**
 	 * When the object is deleted, remove file access tokens that might be hanging around.
-	 * @see sapphire/core/model/DataObjectDecorator#onAfterDelete()
+	 * @see framework/core/model/DataObjectDecorator#onAfterDelete()
 	 */
 	function onAfterDelete() {
 		$tokens = DataObject::get('SecureFileAccessToken', "FileID = '".Convert::raw2sql($this->owner->ID)."'");
