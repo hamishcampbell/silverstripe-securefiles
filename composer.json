@@ -10,7 +10,7 @@
 		"homepage": "http://polemic.net.nz",
 		"email": "hn.campbell@gmail.com"
 		}
-	]
+	],
 	"require":
 	{
 		"silverstripe/framework": "~2.3",
