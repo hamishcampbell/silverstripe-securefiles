@@ -39,7 +39,7 @@ Any or all of the additional systems can be enabled:
  *  Member Permission: assign permission to folders to
     individual members. Inherits permissions from 
     parent folders. 
- *  Token Permissoin: generate a unique URL the grants 
+ *  Token Permission: generate a unique URL the grants 
     access to the file. Optionally set an expiry 
     date
 
