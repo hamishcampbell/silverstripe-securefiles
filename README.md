@@ -43,7 +43,7 @@ Any or all of the additional systems can be enabled:
     access to the file. Optionally set an expiry 
     date
 
-Only ADMINISTRATOR users or users with the the 
+Only ADMINISTRATOR users or users with the 
 SECUREFILESETTINGS permission are able to edit folder 
 security settings in the CMS.
 
